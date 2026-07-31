@@ -207,6 +207,8 @@
   }
   .section-title { font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; }
   .section-sub { color: var(--ink-dim); font-size: 16.5px; margin-top: 14px; max-width: 620px; line-height: 1.6; }
+  .video-embed { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
   /* ============ STATS BAR ============ */
   .stats-band {
@@ -525,6 +527,9 @@
     <span class="kicker reveal">About</span>
     <h2 class="section-title reveal d1">What the Forum is.</h2>
     <p class="section-sub reveal d2">The Jinswara Forum (<code>forum.jinswara.com</code>) is an open, ad-free community platform dedicated to Tatvacharcha and deep philosophical discussion. Built to connect curious minds, Swadhyayis, and seekers of Jainism, it provides a structured space to ask questions, explore scriptural concepts, and exchange authentic knowledge without paywalls or commercial distractions.</p>
+    <div class="video-embed reveal d3" style="margin-top:32px;max-width:640px;">
+      <iframe src="https://www.youtube.com/embed/videoseries?list=PLzi_nN7hhdrA4LzmWPvT1FuwBOS9F_bPd" title="JinSwara Forum" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
   </div>
 </section>
 <section id="features" class="contrib-band">

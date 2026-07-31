@@ -208,6 +208,14 @@
   .section-title { font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; }
   .section-sub { color: var(--ink-dim); font-size: 16.5px; margin-top: 14px; max-width: 620px; line-height: 1.6; }
 
+  /* ============ VIDEO EMBEDS ============ */
+  .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 40px; }
+  .video-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; overflow: hidden; }
+  .video-embed { position: relative; width: 100%; aspect-ratio: 16/9; }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-card h4 { padding: 16px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 720px) { .video-grid { grid-template-columns: 1fr; } }
+
   /* ============ STATS BAR ============ */
   .stats-band {
     position: relative; z-index: 2;
@@ -537,6 +545,29 @@
         <span class="info-label">Core Motive</span>
         <h3>Tech meets Jainism</h3>
         <p>A small attempt to combine technology with Jainism — an opportunity to utilize smart devices for learning Jainism with almost no effort.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY IN MOTION (video embeds) -->
+<section id="journey-videos" class="contrib-band">
+  <div class="wrap">
+    <span class="kicker reveal">Journey in Motion</span>
+    <h2 class="section-title reveal d1">Our story on video.</h2>
+    <p class="section-sub reveal d2">A look back at the JinSwara meetup and some of the older videos from our community archive.</p>
+    <div class="video-grid reveal d3">
+      <div class="video-card">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/3mlwkoVgOFs" title="Jin Swara - Meet 2021" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <h4>JinSwara Meet 2021</h4>
+      </div>
+      <div class="video-card">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/videoseries?list=PLzi_nN7hhdrAVBSamYlWgwegk7NY3vvCh" title="JinSwara - Animated Videos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <h4>Animated Videos</h4>
       </div>
     </div>
   </div>
