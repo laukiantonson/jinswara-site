@@ -513,7 +513,7 @@
         <a href="/jinwani">Jinwani</a>
         <a href="/wordle">Wordle</a>
         <a href="/niyam">Niyam</a>
-        <a href="https://events.jinswara.com" target="_blank">Events</a>
+        <a href="/events/">Events</a>
       </div>
     </div>
     <a href="/about">About</a>
@@ -574,22 +574,7 @@
     <h2 class="section-title reveal d1">Our most active volunteers.</h2>
     <p class="section-sub reveal d2">The people who show up the most — leading swadhyay, moderating discussions, writing content and keeping every project running.</p>
 
-    <div class="contrib-grid">
-      <div class="contrib-card av-1 reveal d1"><div class="contrib-avatar"><img src="/team-contrib/richa.jpg" alt="Richa" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Richa</h4></div>
-      <div class="contrib-card av-2 reveal d1"><div class="contrib-avatar"><img src="/team-contrib/aabhas.jpg" alt="Aabhas" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Aabhas</h4></div>
-      <div class="contrib-card av-3 reveal d1"><div class="contrib-avatar"><img src="/team-contrib/pragya.jpg" alt="Pragya" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Pragya</h4></div>
-
-      <div class="contrib-card av-4 reveal d1"><div class="contrib-avatar"><img src="/team-contrib/soham.jpg" alt="Soham" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Soham</h4></div>
-      <div class="contrib-card av-5 reveal d2"><div class="contrib-avatar"><img src="/team-contrib/tanmay.jpg" alt="Tanmay" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Tanmay</h4></div>
-      <div class="contrib-card av-6 reveal d2"><div class="contrib-avatar"><img src="/team-contrib/moksh.jpg" alt="Moksh" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Moksh</h4></div>
-
-      <div class="contrib-card av-7 reveal d2"><div class="contrib-avatar"><img src="/team-contrib/anannya.jpg" alt="Anannya" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Anannya</h4></div>
-      <div class="contrib-card av-8 reveal d2"><div class="contrib-avatar"><img src="/team-contrib/ankush.jpg" alt="Ankush" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Ankush</h4></div>
-      <div class="contrib-card av-1 reveal d3"><div class="contrib-avatar"><img src="/team-contrib/anitesh.jpg" alt="Anitesh" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Anitesh</h4></div>
-
-      <div class="contrib-card av-2 reveal d3"><div class="contrib-avatar"><img src="/team-contrib/swayam.jpg" alt="Swayam" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Swayam</h4></div>
-      <div class="contrib-card av-3 reveal d3"><div class="contrib-avatar"><img src="/team-contrib/shuchi.jpg" alt="Shuchi" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><h4>Shuchi</h4></div>
-    </div>
+    <div class="contrib-grid" id="contrib-grid"></div>
   </div>
 </section>
 
@@ -598,55 +583,61 @@
   <div class="wrap">
     <span class="kicker reveal">The Full Family</span>
     <h2 class="section-title reveal d1">All Volunteers</h2>
-    <p class="section-sub reveal d2">80+ people, one community. Every name here has given time to JinSwara — thank you.</p>
+    <p class="section-sub reveal d2" id="all-volunteers-sub">80+ people, one community. Every name here has given time to JinSwara — thank you.</p>
 
-    <div class="pill-wrap">
-      <span class="pill reveal">Swasty</span>
-      <span class="pill reveal">Sanyam</span>
-      <span class="pill reveal">Kishan</span>
-      <span class="pill reveal">Shruti</span>
-      <span class="pill reveal">Vishal</span>
-      <span class="pill reveal">Anubhav</span>
-      <span class="pill reveal">Samiksha</span>
-      <span class="pill reveal">Deshna</span>
-      <span class="pill reveal">Samay</span>
-      <span class="pill reveal">Deepesh</span>
-      <span class="pill reveal">Ayushi</span>
-      <span class="pill reveal">Samkit</span>
-      <span class="pill reveal">Atishay</span>
-      <span class="pill reveal">Vibhuti</span>
-      <span class="pill reveal">Bhavya</span>
-      <span class="pill reveal">Sayyam</span>
-      <span class="pill reveal">Divyansh</span>
-      <span class="pill reveal">Asmita</span>
-      <span class="pill reveal">Akansha</span>
-      <span class="pill reveal">Aman</span>
-      <span class="pill reveal">Mitali</span>
-      <span class="pill reveal">Shashank</span>
-      <span class="pill reveal">Shreya</span>
-      <span class="pill reveal">Anushri</span>
-      <span class="pill reveal">Nishtha</span>
-      <span class="pill reveal">Nitasha</span>
-      <span class="pill reveal">Ananya</span>
-      <span class="pill reveal">Dradhta</span>
-      <span class="pill reveal">Aditi</span>
-      <span class="pill reveal">Agam</span>
-      <span class="pill reveal">Chidrup</span>
-      <span class="pill reveal">Nilesh</span>
-      <span class="pill reveal">Nirmala</span>
-      <span class="pill reveal">Anuj</span>
-      <span class="pill reveal">Labdhi</span>
-      <span class="pill reveal">Harshil</span>
-      <span class="pill reveal">Chaitanya</span>
-      <span class="pill reveal">Shubhnay</span>
-      <span class="pill reveal">Pratiti</span>
-      <span class="pill reveal">Jyoti</span>
-      <span class="pill reveal">Sujeet</span>
-      <span class="pill reveal">Pranjal</span>
-      <span class="pill reveal">Preeti</span>
-    </div>
+    <div class="pill-wrap" id="pill-wrap"></div>
   </div>
 </section>
+
+<script>
+  // Live volunteers — fetched from Supabase Storage, replaces static lists above
+  (function(){
+    var url = 'https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/volunteers.json?t=' + Date.now();
+    fetch(url).then(function(r){ return r.json(); }).then(function(vols){
+      if (!Array.isArray(vols)) return;
+      var active = vols.filter(function(v){ return v.status === 'active'; });
+      var other = vols.filter(function(v){ return v.status !== 'active'; });
+
+      var contribGrid = document.getElementById('contrib-grid');
+      var placeholderSvg = '<svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.4 0-8 2.24-8 5v1h16v-1c0-2.76-3.6-5-8-5z"/></svg>';
+      active.forEach(function(v, i){
+        var avClass = 'av-' + ((i % 8) + 1);
+        var card = document.createElement('div');
+        card.className = 'contrib-card ' + avClass;
+        var avatarInner = v.photoUrl
+          ? '<img src="' + v.photoUrl + '" alt="' + v.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+          : placeholderSvg;
+        card.innerHTML = '<div class="contrib-avatar">' + avatarInner + '</div><h4>' + v.name + '</h4>';
+        contribGrid.appendChild(card);
+      });
+
+      var pillWrap = document.getElementById('pill-wrap');
+      other.forEach(function(v){
+        var pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = v.name;
+        pillWrap.appendChild(pill);
+      });
+
+      // keep the stat + copy in sync with the real count
+      // (the counter animation may already be mid-run using the old hardcoded value,
+      // so re-assert the correct final text a few times to win the race)
+      var total = vols.length;
+      var statEl = document.querySelector('.stat-num[data-count]');
+      if (statEl) {
+        statEl.dataset.count = total;
+        var finalText = total + (statEl.dataset.suffix || '');
+        [0, 300, 800, 1700, 2500].forEach(function(delay){
+          setTimeout(function(){ statEl.textContent = finalText; }, delay);
+        });
+      }
+      var badge = document.querySelector('.hero-badge');
+      if (badge) badge.innerHTML = badge.innerHTML.replace(/\d+\+/, total + '+');
+      var sub = document.getElementById('all-volunteers-sub');
+      if (sub) sub.textContent = total + '+ people, one community. Every name here has given time to JinSwara — thank you.';
+    }).catch(function(err){ console.error('volunteers fetch failed', err); });
+  })();
+</script>
 
 <!-- CTA -->
 <div class="cta-strip reveal">
@@ -680,7 +671,7 @@
       <a href="/jinwani">Jinwani</a>
       <a href="/wordle">Wordle</a>
       <a href="/niyam">Niyam</a>
-      <a href="/#projects">Events</a>
+      <a href="/events/">Events</a>
     </div>
     <div class="foot-col">
       <h4>Community</h4>
