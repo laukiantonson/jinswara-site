@@ -282,6 +282,24 @@
   .section-title { font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; }
   .section-sub { color: var(--ink-dim); font-size: 16.5px; margin-top: 14px; max-width: 620px; line-height: 1.6; }
 
+  /* ============ QUOTE BLOCK (philosophy) ============ */
+  .quote-block {
+    margin-top: 32px; padding: 44px 40px; border-radius: var(--radius);
+    background: linear-gradient(160deg, rgba(139,92,246,.08), rgba(45,212,191,.05));
+    border: 1px solid rgba(255,255,255,.09);
+    position: relative; max-width: 720px;
+  }
+  .quote-block .quote-mark {
+    font-family: 'DM Sans'; font-size: 52px; line-height: 1; font-weight: 800;
+    background: linear-gradient(90deg, var(--indigo), var(--teal));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    display: block; margin-bottom: 6px;
+  }
+  .quote-block .deva-quote {
+    font-family: 'DM Sans'; font-size: 22px; line-height: 1.9; color: var(--ink); font-weight: 700;
+  }
+  .quote-block .quote-follow { margin-top: 22px; color: var(--ink-dim); font-size: 15.5px; line-height: 1.75; }
+
   /* ============ STATS BAR ============ */
   .stats-band {
     position: relative; z-index: 2;
@@ -526,6 +544,20 @@
   <h1><span class="grad-text">Our Volunteers</span></h1>
   <p class="tagline">JinSwara runs entirely on the time and heart of its community. <strong>No employees, no paid staff</strong> — just people who show up, week after week, to write, teach, moderate and build for the Jain community.</p>
 </header>
+
+<!-- OUR PHILOSOPHY -->
+<section id="philosophy">
+  <div class="wrap">
+    <span class="kicker reveal">Our Philosophy</span>
+    <h2 class="section-title reveal d1">Family, not employees.</h2>
+    <p class="section-sub reveal d2">Our volunteers aren't staff — they're sadharmis, fellow travelers on this journey. JinSwara exists to help every sadharmi grow, through events like Kavya Srajan, singing competitions and more.</p>
+    <div class="quote-block reveal d3">
+      <span class="quote-mark">"</span>
+      <p class="deva-quote">आराधक ही प्रभावक है।</p>
+      <p class="quote-follow">The one who practices with devotion becomes the one who influences — that's the one rule we hold above all else.</p>
+    </div>
+  </div>
+</section>
 
 <!-- STATS -->
 <div class="stats-band">
