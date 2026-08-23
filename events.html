@@ -732,7 +732,8 @@
   .ev-past-row .ev-btn { flex:none; padding:8px 16px; background: linear-gradient(135deg, #8b5cf6, #6366f1); color:#fff; border-color:transparent; font-weight:700; }
   .ev-past-row .ev-btn:hover { filter:brightness(1.1); transform:translateY(-1px); color:#fff; }
   /* past-event banner cards */
-  .evp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:22px; }
+  .evp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px; }
+  @media (min-width:1024px){ .evp-grid { grid-template-columns:repeat(3,1fr); } }
   .evp-card { display:flex; flex-direction:column; border-radius:var(--radius); background:var(--card); border:1px solid var(--card-border); overflow:hidden; transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
   .evp-card:hover { transform:translateY(-6px); border-color:rgba(139,92,246,.45); box-shadow:0 22px 50px -16px rgba(139,92,246,.35); }
   .evp-banner { width:100%; aspect-ratio:1705/923; object-fit:cover; display:block; background:var(--bg-3); }
@@ -741,7 +742,7 @@
   .evp-title { font-family:'DM Sans'; font-weight:700; font-size:16.5px; letter-spacing:-.01em; line-height:1.35; }
   .evp-meta { font-size:12.5px; color:var(--ink-faint); }
   .evp-desc { font-size:13.5px; color:var(--ink-dim); line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .evp-body .ev-btn { margin-top:auto; align-self:flex-start; padding:8px 16px; background:linear-gradient(135deg,#8b5cf6,#6366f1); color:#fff; border-color:transparent; font-weight:700; }
+  .evp-body .ev-btn { margin-top:auto; align-self:stretch; text-align:center; padding:9px 16px; background:linear-gradient(135deg,#8b5cf6,#6366f1); color:#fff; border-color:transparent; font-weight:700; }
   .evp-body .ev-btn:hover { filter:brightness(1.1); transform:translateY(-1px); color:#fff; }
 
   /* HOMEPAGE BANNER (ongoing-event, animated) */
@@ -1024,7 +1025,7 @@ fetch(EVENTS_URL).then(r => r.json()).then(events => {
   ongoingGrid.innerHTML = ongoing.length ? ongoing.map(eventCard).join("") : '<p style="color:var(--ink-faint);">No ongoing events right now — check back soon.</p>';
   document.getElementById("ev-upcoming-grid").innerHTML = upcoming.slice(0,2).map(eventCard).join("");
   const pastPreview = document.getElementById("ev-past-preview");
-  pastPreview.innerHTML = past.slice(0,2).map(evpCard).join("") || '<p style="color:var(--ink-faint);">No past events yet.</p>';
+  pastPreview.innerHTML = past.slice(0,3).map(evpCard).join("") || '<p style="color:var(--ink-faint);">No past events yet.</p>';
 }).catch(err => {
   document.getElementById("ev-ongoing-grid").innerHTML = '<p style="color:var(--ink-faint);">Couldn\'t load events right now.</p>';
   console.error(err);

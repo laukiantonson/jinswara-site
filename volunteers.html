@@ -10,7 +10,7 @@
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Volunteers — JinSwara</title>
+<title>Volunteers — The People Behind JinSwara Jain Community</title>
 <meta name="description" content="Meet the 80+ volunteers who write, moderate, teach, and build across JinSwara's community platforms.">
 <link rel="canonical" href="https://jinswara.lauki.ai/volunteers">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -18,13 +18,13 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Our Volunteers — JinSwara">
+<meta property="og:title" content="Volunteers — The People Behind JinSwara Jain Community">
 <meta property="og:description" content="Meet the 80+ volunteers who write, moderate, teach, and build across JinSwara's community platforms.">
 <meta property="og:url" content="https://jinswara.lauki.ai/volunteers">
 <meta property="og:image" content="https://jinswara.lauki.ai/og-image.png">
 <meta property="og:site_name" content="JinSwara">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Our Volunteers — JinSwara">
+<meta name="twitter:title" content="Volunteers — The People Behind JinSwara Jain Community">
 <meta name="twitter:description" content="Meet the 80+ volunteers who write, moderate, teach, and build across JinSwara's community platforms.">
 <meta name="twitter:image" content="https://jinswara.lauki.ai/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -502,7 +502,7 @@
 <!-- NAV -->
 <nav>
   <a class="logo" href="/">
-    <div class="logo-mark"><img src="/logo.png" alt="JinSwara" style="width:100%;height:100%;border-radius:12px;object-fit:cover;"></div>
+    <div class="logo-mark"><img src="/logo.png" alt="JinSwara" width="40" height="40" style="width:100%;height:100%;border-radius:12px;object-fit:cover;"></div>
     <div class="logo-text">JinSwara<span class="deva">जिनस्वर</span></div>
   </a>
   <div class="nav-links">
@@ -513,14 +513,15 @@
         <a href="/jinwani">Jinwani</a>
         <a href="/wordle">Wordle</a>
         <a href="/niyam">Niyam</a>
-        <a href="/events/">Events</a>
       </div>
     </div>
+    <a href="/events/">Events</a>
+    <a href="/book-club">Book Club</a>
     <a href="/about">About</a>
     <a href="/#story">Story</a>
     <a href="/#team">Team</a>
     <a href="/volunteers" class="active">Volunteers</a>
-    <a href="/" class="nav-cta">Know More</a>
+    <a href="/about" class="nav-cta">Know More</a>
   </div>
   <button class="theme-toggle" aria-label="Toggle light/dark theme" onclick="toggleTheme()">
     <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -605,7 +606,7 @@
         var card = document.createElement('div');
         card.className = 'contrib-card ' + avClass;
         var avatarInner = v.photoUrl
-          ? '<img src="' + v.photoUrl + '" alt="' + v.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+          ? '<img src="' + v.photoUrl + '" alt="' + v.name + '" width="84" height="84" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
           : placeholderSvg;
         card.innerHTML = '<div class="contrib-avatar">' + avatarInner + '</div><h4>' + v.name + '</h4>';
         contribGrid.appendChild(card);
@@ -651,7 +652,7 @@
   <div class="foot-grid">
     <div class="foot-brand">
       <a class="logo" href="/">
-        <div class="logo-mark"><img src="/logo.png" alt="JinSwara" style="width:100%;height:100%;border-radius:12px;object-fit:cover;"></div>
+        <div class="logo-mark"><img src="/logo.png" alt="JinSwara" width="40" height="40" style="width:100%;height:100%;border-radius:12px;object-fit:cover;"></div>
         <div class="logo-text">JinSwara<span class="deva">जिनस्वर</span></div>
       </a>
       <p>A non-profit, community-run initiative bringing Jainism closer to you since 2017. Free forever, no ads, open to all.</p>
@@ -672,6 +673,7 @@
       <a href="/wordle">Wordle</a>
       <a href="/niyam">Niyam</a>
       <a href="/events/">Events</a>
+      <a href="/book-club">Book Club</a>
     </div>
     <div class="foot-col">
       <h4>Community</h4>
@@ -795,5 +797,6 @@ if (window.matchMedia) {
   });
 }
 </script>
+<script src="/platforms-site.js" defer></script>
 </body>
 </html>
