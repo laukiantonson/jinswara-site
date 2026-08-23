@@ -10,22 +10,22 @@
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy — JinSwara</title>
-<meta name="description" content="Read JinSwara's privacy policy — how we handle your data across our free, community-run platforms.">
-<link rel="canonical" href="https://jinswara.lauki.ai/privacy">
+<title>Jinvani Book Club — Monthly Jain Book Study &amp; Discussion | JinSwara</title>
+<meta name="description" content="Jinvani Book Club — a study and discussion community for young minds. One Jinvani every month, daily excerpts on WhatsApp, month-end open discussion. By JinWani × JinSwara.">
+<link rel="canonical" href="https://jinswara.lauki.ai/book-club">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Privacy Policy — JinSwara">
-<meta property="og:description" content="Read JinSwara's privacy policy — how we handle your data across our free, community-run platforms.">
-<meta property="og:url" content="https://jinswara.lauki.ai/privacy">
+<meta property="og:title" content="Jinvani Book Club — Monthly Jain Book Study &amp; Discussion | JinSwara">
+<meta property="og:description" content="Jinvani Book Club — a study and discussion community for young minds. One Jinvani every month, daily excerpts on WhatsApp, month-end open discussion. By JinWani × JinSwara.">
+<meta property="og:url" content="https://jinswara.lauki.ai/book-club">
 <meta property="og:image" content="https://jinswara.lauki.ai/og-image.png">
 <meta property="og:site_name" content="JinSwara">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Privacy Policy — JinSwara">
-<meta name="twitter:description" content="Read JinSwara's privacy policy — how we handle your data across our free, community-run platforms.">
+<meta name="twitter:title" content="Jinvani Book Club — Monthly Jain Book Study &amp; Discussion | JinSwara">
+<meta name="twitter:description" content="Jinvani Book Club — a study and discussion community for young minds. One Jinvani every month, daily excerpts on WhatsApp, month-end open discussion. By JinWani × JinSwara.">
 <meta name="twitter:image" content="https://jinswara.lauki.ai/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -281,6 +281,14 @@
   }
   .section-title { font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; }
   .section-sub { color: var(--ink-dim); font-size: 16.5px; margin-top: 14px; max-width: 620px; line-height: 1.6; }
+
+  /* ============ VIDEO EMBEDS ============ */
+  .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 40px; }
+  .video-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; overflow: hidden; }
+  .video-embed { position: relative; width: 100%; aspect-ratio: 16/9; }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-card h4 { padding: 16px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 720px) { .video-grid { grid-template-columns: 1fr; } }
 
   /* ============ STATS BAR ============ */
   .stats-band {
@@ -542,14 +550,6 @@
     .stats-row { grid-template-columns: repeat(3, 1fr); }
     .pill { padding: 8px 16px; font-size: 13px; }
   }
-  .legal-wrap { max-width: 760px; margin: 0 auto; padding: 140px 24px 100px; }
-  .legal-wrap h1 { font-family:'DM Sans'; font-size: 38px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.02em; }
-  .legal-wrap .legal-updated { color: var(--ink-faint); font-size: 13px; margin-bottom: 44px; }
-  .legal-wrap h2 { font-family:'DM Sans'; font-size: 19px; font-weight: 700; margin: 36px 0 12px; letter-spacing: -.01em; }
-  .legal-wrap p, .legal-wrap li { color: var(--ink-dim); font-size: 15px; line-height: 1.8; }
-  .legal-wrap ul { margin: 10px 0 10px 20px; }
-  .legal-wrap li { margin-bottom: 6px; }
-  .legal-wrap strong { color: var(--ink); }
   .foot-social { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
   .foot-social a {
     width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
@@ -558,7 +558,65 @@
   }
   .foot-social a:hover { transform: translateY(-3px); color: var(--lavender); border-color: rgba(196,181,253,.5); background: rgba(255,255,255,.08); }
   .foot-social svg { width: 17px; height: 17px; fill: currentColor; }
+  
+  @media (max-width: 760px) {
+    #book-of-the-month .info-grid { grid-template-columns: 1fr !important; }
+  }
 </style>
+<style>
+.md-body p{margin:0 0 10px;}.md-body p:last-child{margin-bottom:0;}
+.md-body ul,.md-body ol{margin:0 0 10px;padding-left:22px;}
+.md-body li{margin:4px 0;}
+.md-body h3,.md-body h4,.md-body h5,.md-body h6{margin:16px 0 6px;line-height:1.35;}
+.md-body a{color:var(--violet,#8b5cf6);text-decoration:underline;text-underline-offset:2px;}
+.md-body code{background:rgba(127,127,127,.15);padding:1px 5px;border-radius:5px;font-size:.9em;}
+</style>
+<script>
+function mdEsc_(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function mdInline_(s){return s
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+  .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+  .replace(/(^|[\s(])\*([^*\n]+)\*/g,'$1<em>$2</em>')
+  .replace(/`([^`]+)`/g,'<code>$1</code>');}
+function mdToHtml(src){
+  var lines=String(src||'').split(/\r?\n/),out=[],list=null;
+  function close(){ if(list){out.push('</'+list+'>');list=null;} }
+  for(var i=0;i<lines.length;i++){
+    var t=mdEsc_(lines[i]).trim();
+    var h=t.match(/^(#{1,4})\s+(.*)/), ul=t.match(/^([-*\u2022])\s+(.*)/), ol=t.match(/^\d+[.)]\s+(.*)/);
+    if(h){close();var lv=Math.min(h[1].length+2,6);out.push('<h'+lv+'>'+mdInline_(h[2])+'</h'+lv+'>');}
+    else if(ul){if(list!=='ul'){close();out.push('<ul>');list='ul';}out.push('<li>'+mdInline_(ul[2])+'</li>');}
+    else if(ol){if(list!=='ol'){close();out.push('<ol>');list='ol';}out.push('<li>'+mdInline_(ol[1])+'</li>');}
+    else if(!t){close();}
+    else{close();out.push('<p>'+mdInline_(t)+'</p>');}
+  }
+  close();return out.join('');
+}
+function mdStrip(s){return String(s||'').replace(/\[([^\]]*)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/^#+\s*/gm,'').replace(/`/g,'');}
+function jswYM(s){
+  if(!s) return '';
+  s=String(s).trim();
+  if(/^\d{4}-\d{2}$/.test(s)) return s;
+  var M=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  var m=s.match(/([A-Za-z]+)[\s,]+(\d{4})/); if(!m) return '';
+  var i=M.indexOf(m[1].toLowerCase().slice(0,3));
+  return i<0?'':m[2]+'-'+String(i+1).padStart(2,'0');
+}
+function jswPickCurrent(d){
+  if(!d) return null;
+  var cur = d.current&&(d.current.titleHindi||d.current.titleEnglish)? d.current : null;
+  var pool = (cur?[cur]:[]).concat(Array.isArray(d.past)?d.past:[]);
+  if(!pool.length) return null;
+  var n=new Date(), now=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');
+  for(var i=0;i<pool.length;i++){ if(jswYM(pool[i]&&pool[i].month)===now) return pool[i]; }
+  return cur||pool[0];
+}
+function jswPastBooks(d,chosen){
+  var cur = d&&d.current&&(d.current.titleHindi||d.current.titleEnglish)? d.current : null;
+  var pool = (cur?[cur]:[]).concat(d&&Array.isArray(d.past)?d.past:[]);
+  return pool.filter(function(b){return b&&b!==chosen;}).sort(function(a,b){return jswYM(b.month).localeCompare(jswYM(a.month));});
+}
+</script>
 </head>
 <body>
 
@@ -579,12 +637,12 @@
       </div>
     </div>
     <a href="/events/">Events</a>
-    <a href="/book-club">Book Club</a>
+    <a href="/book-club" class="active">Book Club</a>
     <a href="/about">About</a>
     <a href="/#story">Story</a>
     <a href="/#team">Team</a>
     <a href="/volunteers">Volunteers</a>
-    <a href="/" class="nav-cta">Know More</a>
+    <a href="/about" class="nav-cta">Know More</a>
   </div>
   <button class="theme-toggle" aria-label="Toggle light/dark theme" onclick="toggleTheme()">
     <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -595,40 +653,184 @@
     <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
 </nav>
-<div class="legal-wrap">
-  <h1>Privacy Policy</h1>
-  <p class="legal-updated">Last updated: February 2026</p>
-  <p>JinSwara respects your privacy. This page explains what information we collect (very little) and how it's used.</p>
 
-  <h2>1. No Tracking, No Ads</h2>
-  <p>We do not run advertisements and do not use third-party ad-tracking cookies. Our platforms are built to be as lightweight and privacy-respecting as possible.</p>
+<!-- PAGE HERO -->
+<header class="page-hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="grid-overlay"></div>
 
-  <h2>2. Information We Collect</h2>
-  <ul>
-    <li><strong>Forum accounts:</strong> basic details (name, email) needed to create and manage your account and participate in discussions.</li>
-    <li><strong>Jinwani publisher accounts:</strong> business/contact details (name, phone/WhatsApp number) provided voluntarily by publishers to list their catalog.</li>
-    <li><strong>Standard analytics:</strong> anonymized, aggregate usage data (e.g. page visits) to help us understand which features are useful — never sold or shared with third parties for advertising.</li>
-  </ul>
+  <div class="hero-badge"><span class="dot"></span>READ &bull; REFLECT &bull; DISCUSS &bull; GROW</div>
+  <h1><span class="grad-text">Jinvani Book Club</span></h1>
+  <p class="tagline">A <strong>Study &amp; Discussion Community</strong> for Young Minds — a reading community by JinWani &times; JinSwara.</p>
+</header>
 
-  <h2>3. How We Use Your Information</h2>
-  <p>Information collected is used solely to operate the relevant platform — e.g. displaying your Forum profile, or connecting a reader with a publisher on Jinwani. We do not sell, rent, or trade your personal data to anyone.</p>
+<!-- THE IDEA -->
+<section id="idea">
+  <div class="wrap">
+    <span class="kicker reveal">The Idea</span>
+    <h2 class="section-title reveal d1">Read together, understand together.</h2>
+    <p class="section-sub reveal d2">Have you ever wanted to read a good Jinvani, but never quite managed to begin? Or started one, only to stop midway because reading alone gets hard? The Jinvani Book Club was created to solve exactly this — here, we read together and understand together.</p>
+  </div>
+</section>
 
-  <h2>4. Data Storage &amp; Security</h2>
-  <p>We take reasonable technical measures to protect any data stored on our platforms. As a volunteer-run, non-profit initiative, we ask for your understanding that our infrastructure is maintained on a best-effort basis.</p>
 
-  <h2>5. Your Choices</h2>
-  <p>You can request account deletion or data removal at any time by contacting us. We will action such requests promptly.</p>
+<!-- WHY A JAIN BOOK CLUB -->
+<section id="why-jain-club" class="contrib-band">
+  <div class="wrap">
+    <span class="kicker reveal">Why a Jain Book Club?</span>
+    <h2 class="section-title reveal d1">A modern concept, rooted in traditional wisdom.</h2>
+    <p class="section-sub reveal d2">Across the world, book clubs thrive — for fiction, non-fiction, and everything in between. But we felt the need for a Jain book club: one that modernizes this global concept and brings Jain philosophy to the young generation.</p>
+    <div class="info-grid">
+      <div class="info-card a1 reveal d1">
+        <span class="info-label">Enjoy, Don&rsquo;t Just Read</span>
+        <h3>Reading as joy</h3>
+        <p>We want readers to enjoy reading Jain books — not just get through them. Every book becomes an experience shared with the community.</p>
+      </div>
+      <div class="info-card a2 reveal d2">
+        <span class="info-label">Beyond the Page</span>
+        <h3>Notes &amp; reflections</h3>
+        <p>Build the habit of taking notes and reflecting on what you read — even on the ideas between the lines, the ones no book spells out.</p>
+      </div>
+      <div class="info-card a3 reveal d3">
+        <span class="info-label">The Jain Way</span>
+        <h3>Modern, yet traditional</h3>
+        <p>Jains have always embraced modernization — while holding on to traditional wisdom. The Jinvani Book Club carries that same spirit into how we read.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <h2>6. Children's Privacy</h2>
-  <p>Our platforms (like Jain Wordle and Niyam) are designed to be family-friendly and safe for all ages. We do not knowingly collect personal information from children beyond what's minimally required for account features.</p>
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="wrap">
+    <span class="kicker reveal">How It Works</span>
+    <h2 class="section-title reveal d1">One book. One month. One community.</h2>
+    <div class="info-grid">
+      <div class="info-card a1 reveal d1">
+        <span class="info-label">Step 1</span>
+        <h3>One Jinvani every month</h3>
+        <p>Every month, we pick one Jinvani. All members read it at their own pace and convenience — a little every day.</p>
+      </div>
+      <div class="info-card a2 reveal d2">
+        <span class="info-label">Step 2</span>
+        <h3>Daily excerpts &amp; quotes</h3>
+        <p>Daily excerpts and quotes from the book are shared in our WhatsApp community, keeping the reading alive all month.</p>
+      </div>
+      <div class="info-card a3 reveal d3">
+        <span class="info-label">Step 3</span>
+        <h3>Month-end discussion</h3>
+        <p>At the end of the month, we meet online for an open discussion — questions, reflections, and takeaways.</p>
+      </div>
+    </div>
+    <p class="section-sub reveal d3" style="margin-top:28px;">This is not just a community that reads Jinvani. It is a collective journey of understanding Jain wisdom, reflecting on it, and learning from one another.</p>
+  </div>
+</section>
 
-  <h2>7. Changes to This Policy</h2>
-  <p>We may update this privacy policy as our platforms evolve. Material changes will be reflected here with an updated date.</p>
 
-  <h2>8. Contact</h2>
-  <p>Questions about your privacy? <a href="/contact" style="color:var(--lavender)">Get in touch</a>.</p>
+<!-- READING SESSIONS -->
+<section id="reading-sessions" class="contrib-band">
+  <div class="wrap">
+    <span class="kicker reveal">Reading Sessions</span>
+    <h2 class="section-title reveal d1">We also read together, live.</h2>
+    <p class="section-sub reveal d2">Between books, we hold live reading sessions — where we read short stories together in the session itself. It&rsquo;s the easiest way to get accustomed to reading Jain books, build interest, and ease into the habit before picking up a full Jinvani.</p>
+    <div class="info-grid">
+      <div class="info-card a1 reveal d1">
+        <span class="info-label">In the Session</span>
+        <h3>Short stories, read live</h3>
+        <p>No homework — we read short Jain stories together during the session, so everyone participates from day one.</p>
+      </div>
+      <div class="info-card a2 reveal d2">
+        <span class="info-label">The Purpose</span>
+        <h3>Comfort before commitment</h3>
+        <p>Sessions help new readers get accustomed to Jain books and build genuine interest — step by step, story by story.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-</div>
+<!-- WHY JOIN -->
+<section id="why-join">
+  <div class="wrap">
+    <span class="kicker reveal">Why Join?</span>
+    <h2 class="section-title reveal d1">No lectures. No tests. No pressure.</h2>
+    <div class="info-grid">
+      <div class="info-card a4 reveal d1">
+        <span class="info-label">Habit</span>
+        <h3>Build a regular Swadhyay habit</h3>
+        <p>Together, not alone — consistency comes naturally when a whole community reads with you.</p>
+      </div>
+      <div class="info-card a1 reveal d2">
+        <span class="info-label">Practice</span>
+        <h3>A consistent reading practice</h3>
+        <p>Develop the habit of reading every day — without pressure, at your own pace.</p>
+      </div>
+      <div class="info-card a2 reveal d3">
+        <span class="info-label">Wisdom</span>
+        <h3>Jain wisdom, modern life</h3>
+        <p>Understand Jain wisdom in the context of modern life — where it matters most.</p>
+      </div>
+      <div class="info-card a3 reveal d4">
+        <span class="info-label">Perspectives</span>
+        <h3>Learn from one another</h3>
+        <p>Every discussion brings something new — other readers&rsquo; perspectives open doors your own reading might not.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- BOOK OF THE MONTH -->
+<section id="book-of-the-month" class="contrib-band">
+  <div class="wrap">
+    <span class="kicker reveal" id="bcp-kicker">Book of the Month &mdash; August 2026</span>
+    <h2 class="section-title reveal d1" id="bcp-title">सत्य की खोज</h2>
+    <div class="info-grid" style="grid-template-columns: 280px 1fr; align-items: start;">
+      <div class="reveal d1" style="text-align:center;">
+        <img src="/img/skk-cover.jpg" id="bcp-cover" alt="Book of the Month — book cover" style="width:100%; max-width:280px; border-radius:14px; border:1px solid var(--card-border); box-shadow:0 18px 50px rgba(0,0,0,.25);">
+      </div>
+      <div class="info-card a1 reveal d2">
+        <span class="info-label" id="bcp-byline">By Dr. Hukamchand Bharill · Pandit Todarmal Smarak Trust</span>
+        <h3 id="bcp-h3">Tattvagyan, told as a story</h3>
+        <p id="bcp-sum">A search for the soul, truth and bhed-vigyan — written in simple language, in story form. Widely considered the best first book for anyone beginning their Swadhyay journey.</p>
+        <p style="margin-top:18px;">
+          <a id="bcp-wa" href="https://chat.whatsapp.com/Hdofo4SWvVYE03CUXprO9L" target="_blank" rel="noopener" style="display:inline-block; padding:12px 22px; border-radius:12px; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; font-weight:700; text-decoration:none; margin:4px 8px 4px 0;">Join the WhatsApp Community</a>
+          <a href="/book-of-the-month" style="display:inline-block; padding:12px 22px; border-radius:12px; border:1px solid var(--card-border); background:var(--card); color:var(--ink); font-weight:700; text-decoration:none; margin:4px 8px 4px 0;">Full Book Details</a>
+          <a id="bcp-jw" href="https://jinwani.jinswara.com/search?q=%E0%A4%B8%E0%A4%A4%E0%A5%8D%E0%A4%AF%20%E0%A4%95%E0%A5%80%20%E0%A4%96%E0%A5%8B%E0%A4%9C" target="_blank" rel="noopener" style="display:inline-block; padding:12px 22px; border-radius:12px; border:1px solid var(--card-border); background:var(--card); color:var(--ink); font-weight:700; text-decoration:none; margin:4px 0;">Get the Book on JinWani</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAST BOOKS -->
+<section id="past-books">
+  <div class="wrap">
+    <span class="kicker reveal">Past Books</span>
+    <h2 class="section-title reveal d1">The archive grows every month.</h2>
+    <p class="section-sub reveal d2" id="bcp-past-empty">The club is just getting started — every book we finish together will be archived here, with its discussion takeaways.</p>
+    <div class="info-grid" id="bcp-past" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); margin-top:34px;"></div>
+    <div style="text-align:center; margin-top:34px;"><a href="/book-of-the-month#past-books" class="btn btn-primary">View the Archive</a></div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section id="who-for" class="contrib-band">
+  <div class="wrap">
+    <span class="kicker reveal">Who Is It For?</span>
+    <h2 class="section-title reveal d1">Everyone who is willing to read.</h2>
+    <p class="section-sub reveal d2">Whether you are a regular reader or just want to begin, you are welcome. No preparation is needed — only the willingness to read. Join like-minded youths and turn your personal growth into a journey.</p>
+    <div class="quote-block reveal d3">
+      <span class="quote-mark">"</span>
+      <p class="deva-quote">If you believe that knowledge is understood better together than alone, come join us.</p>
+      <div class="quote-attr">— Jinvani Book Club</div>
+      <p class="quote-follow">Read &bull; Reflect &bull; Discuss &bull; Grow<br>A Reading Community by JinWani &times; JinSwara</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="foot-grid">
     <div class="foot-brand">
@@ -779,5 +981,63 @@ if (window.matchMedia) {
 }
 </script>
 <script src="/platforms-site.js" defer></script>
+<script>
+(async function(){
+  try{
+    var r = await fetch('https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/bookclub.json?t='+Date.now());
+    if(!r.ok) return;
+    var d = await r.json();
+    var set = function(id,v){ var e=document.getElementById(id); if(e&&v!=null&&v!=='') e.textContent=v; };
+    var c = jswPickCurrent(d)||{};
+    var hasCur = !!(c.titleHindi||c.titleEnglish);
+    if(hasCur){
+      set('bcp-kicker','Book of the Month \u2014 '+(c.month||''));
+      set('bcp-title', c.titleHindi||c.titleEnglish);
+      if(c.titleEnglish) set('bcp-h3', c.titleEnglish);
+      if(c.author||c.publisher) set('bcp-byline','By '+[c.author,c.publisher].filter(Boolean).join(' \u00b7 '));
+      if(c.summary){
+        var t = mdStrip(c.summary.split('\n')[0]);
+        if(t.length>320) t = t.slice(0,320).replace(/\s+\S*$/,'')+'\u2026';
+        set('bcp-sum', t);
+      }
+      var im = document.getElementById('bcp-cover');
+      if(im && c.coverUrl){ im.src = c.coverUrl; im.alt = (c.titleHindi||c.titleEnglish)+' \u2014 book cover'; }
+      var wa = document.getElementById('bcp-wa'); if(wa && c.whatsappUrl) wa.href = c.whatsappUrl;
+      var jw = document.getElementById('bcp-jw');
+      if(jw && Array.isArray(c.editions) && c.editions.length && c.editions[0].buyUrl) jw.href = c.editions[0].buyUrl;
+    }
+    var pastList = jswPastBooks(d, c);
+    if(pastList.length){
+      var pe = document.getElementById('bcp-past-empty');
+      if(pe) pe.textContent = 'Every book the club has finished together \u2014 the archive grows each month.';
+      var grid = document.getElementById('bcp-past');
+      if(grid){
+        grid.innerHTML = '';
+        if(!document.getElementById('bc-past-style')){var _st=document.createElement('style');_st.id='bc-past-style';_st.textContent='.bc-past-card{transition:transform .2s ease, box-shadow .2s ease;} .bc-past-card:hover{transform:translateY(-4px); box-shadow:0 18px 44px rgba(0,0,0,.22);} .bc-past-card:hover .bc-open-btn{filter:brightness(1.08);}';document.head.appendChild(_st);}
+        pastList.forEach(function(b){
+          var card = document.createElement('a');
+          card.className = 'bc-past-card info-card reveal visible';
+          card.style.cssText = 'text-align:center; display:block; text-decoration:none; color:inherit; cursor:pointer;';
+          var _t=(b&&(b.titleEnglish||b.titleHindi)||'').toString().trim().toLowerCase();
+          var _s=_t.replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); if(!_s){ var _ym=jswYM(b&&b.month); _s=_ym||'book'; }
+          card.href = '/book-of-the-month/book?id='+encodeURIComponent(_s);
+          if(b.coverUrl){
+            var img = document.createElement('img');
+            img.src = b.coverUrl; img.loading = 'lazy';
+            img.alt = (b.titleHindi||b.titleEnglish||'Book')+' \u2014 cover';
+            img.style.cssText = 'width:100%;max-width:180px;border-radius:12px;border:1px solid var(--card-border);box-shadow:0 12px 30px rgba(0,0,0,.22);margin:0 auto 14px;display:block;';
+            card.appendChild(img);
+          }
+          var lb = document.createElement('span'); lb.className='info-label'; lb.textContent = b.month||''; card.appendChild(lb);
+          var h = document.createElement('h3'); h.textContent = b.titleHindi||b.titleEnglish||''; card.appendChild(h);
+          var p = document.createElement('p'); p.textContent = [b.titleEnglish, b.author].filter(Boolean).join(' \u00b7 '); card.appendChild(p);
+          var btn = document.createElement('span'); btn.className='bc-open-btn'; btn.style.cssText='display:inline-block; margin-top:16px; padding:9px 18px; border-radius:10px; background:linear-gradient(135deg,var(--violet),var(--pink)); color:#fff; font-weight:700; font-size:.85rem;'; btn.textContent='Read this book \u2192'; card.appendChild(btn);
+          grid.appendChild(card);
+        });
+      }
+    }
+  }catch(e){}
+})();
+</script>
 </body>
 </html>

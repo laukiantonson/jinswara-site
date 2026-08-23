@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JinSwara Events — Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+  .shell { display:flex; min-height:100vh; }
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+  .content { padding:28px 32px 60px; max-width:900px; }
+  .panels { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+  .panel { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; margin-bottom:20px; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--card-border); }
+  .panel-head h3 { font-size:15px; font-weight:700; }
+  .panel-head p { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+  .chip-body { padding:18px 22px 20px; display:flex; flex-direction:column; gap:10px; }
+  .chip-row { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    border-radius:10px; padding:9px 12px; }
+  .chip-row input { flex:1; min-width:0; background:transparent; border:none; color:var(--ink); font-size:13.5px; font-family:'Inter'; outline:none; }
+  .chip-remove { width:26px; height:26px; border-radius:7px; border:1px solid var(--card-border); background:transparent; color:var(--ink-faint);
+    display:grid; place-items:center; cursor:pointer; font-size:12px; flex:none; }
+  .chip-remove:hover { border-color:rgba(255,107,107,.4); color:var(--coral); }
+  .add-row { display:flex; gap:8px; margin-top:4px; }
+  .add-row input { flex:1; background:rgba(255,255,255,.03); border:1px solid var(--card-border); color:var(--ink);
+    padding:10px 13px; border-radius:10px; font-size:13.5px; font-family:'Inter'; }
+  .btn-add { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--indigo),var(--violet));
+    color:#fff; font-size:13px; font-weight:700; padding:8px 15px; border-radius:9px; border:none; cursor:pointer; white-space:nowrap; }
+  .empty-note { font-size:12.5px; color:var(--ink-faint); font-style:italic; padding:6px 2px; }
+  .save-bar { display:flex; align-items:center; gap:12px; margin-top:4px; }
+  .btn-save-all { background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal)); color:#fff; font-weight:700;
+    font-size:13.5px; padding:11px 22px; border-radius:10px; border:none; cursor:pointer; }
+  .save-note { font-size:12px; color:var(--ink-faint); }
+
+  /* MOBILE — sidebar collapses to a horizontal scrollable tab bar so nav links
+     (incl. Events) never overflow off-screen or require horizontal scrolling */
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+.chip-remove{width:40px;height:40px;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+(function(){
+  // Optimistic unlock — hide the gate immediately if a cached password exists so
+  // refreshing the page never flashes the login screen for an already-authed admin.
+  if (sessionStorage.getItem("jinswara_admin_pw")) {
+    document.getElementById("admin-auth-gate").style.display = "none";
+  }
+  document.getElementById("admin-auth-btn").addEventListener("click", tryLogin);
+  document.getElementById("admin-auth-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") tryLogin(); });
+  async function tryLogin() {
+    const pw = document.getElementById("admin-auth-pw").value;
+    const errEl = document.getElementById("admin-auth-err");
+    errEl.textContent = "Checking…";
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: pw}) });
+      const data = await resp.json();
+      if (data.ok) {
+        sessionStorage.setItem("jinswara_admin_pw", pw);
+        document.getElementById("admin-auth-gate").style.display = "none";
+      } else {
+        errEl.textContent = "Incorrect password";
+      }
+    } catch(e) {
+      errEl.textContent = "Connection error";
+    }
+  }
+
+  (async () => {
+    const saved = sessionStorage.getItem("jinswara_admin_pw");
+    if (!saved) return;
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: saved}) });
+      const data = await resp.json();
+      if (!data.ok) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        document.getElementById("admin-auth-gate").style.display = "flex";
+      }
+    } catch(e) { /* network hiccup — don't punish the admin for it, keep them in */ }
+  })();
+})();
+</script>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/events/admin-panel"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a href="/events/platforms-admin"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Platforms</a>
+      <a href="/events/bookclub-admin"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Book Club</a>
+      <a href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a class="active" href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Settings</h1><p>Manage event types &amp; age categories used across all events</p></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="panels">
+        <div class="panel">
+          <div class="panel-head"><div><h3>Event Types</h3><p>shows up as the Event Type dropdown when adding/editing an event</p></div></div>
+          <div class="chip-body">
+            <div id="types-list"></div>
+            <div class="add-row"><input type="text" id="new-type-input" placeholder="e.g. Drawing"><button class="btn-add" id="add-type-btn">+ Add</button></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div><h3>Age Categories</h3><p>shows as selectable checkboxes when adding/editing an event</p></div></div>
+          <div class="chip-body">
+            <div id="cats-list"></div>
+            <div class="add-row"><input type="text" id="new-cat-input" placeholder="e.g. Bal Varg"><button class="btn-add" id="add-cat-btn">+ Add</button></div>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column:1 / -1;">
+          <div class="panel-head"><div><h3>Reset Password</h3><p>change the admin panel login password</p></div></div>
+          <div class="chip-body">
+            <div class="add-row"><input type="password" id="rp-current" placeholder="Current password" style="flex:1;background:rgba(255,255,255,.03);border:1px solid var(--card-border);color:var(--ink);padding:10px 13px;border-radius:10px;font-size:13.5px;font-family:'Inter';"></div>
+            <div class="add-row"><input type="password" id="rp-new" placeholder="New password (minimum 4 characters)" style="flex:1;background:rgba(255,255,255,.03);border:1px solid var(--card-border);color:var(--ink);padding:10px 13px;border-radius:10px;font-size:13.5px;font-family:'Inter';"></div>
+            <div class="add-row"><input type="password" id="rp-confirm" placeholder="confirm new password" style="flex:1;background:rgba(255,255,255,.03);border:1px solid var(--card-border);color:var(--ink);padding:10px 13px;border-radius:10px;font-size:13.5px;font-family:'Inter';"></div>
+            <div class="add-row" style="margin-top:2px;">
+              <button class="btn-add" id="rp-submit">Update Password</button>
+              <span id="rp-note" style="font-size:12.5px;align-self:center;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <button class="btn-save-all" id="btn-save-settings">Save Settings</button>
+        <span class="save-note" id="save-note"></span>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  const SETTINGS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/settings.json";
+  const DEFAULT_SETTINGS = {
+    eventTypes: ["Kavya", "Recitation", "Quiz", "Essay"],
+    ageCategories: ["Bal Varg", "Yuva Varg", "Praudh Varg", "Open Category"]
+  };
+  let SETTINGS = { eventTypes: [], ageCategories: [] };
+
+  function esc(s){ return (s||'').toString().replace(/</g,'&lt;'); }
+
+  async function loadSettings(){
+    try {
+      const resp = await fetch(SETTINGS_URL + "?t=" + Date.now());
+      if (!resp.ok) throw new Error('no settings yet');
+      SETTINGS = await resp.json();
+      if (!Array.isArray(SETTINGS.eventTypes)) SETTINGS.eventTypes = [...DEFAULT_SETTINGS.eventTypes];
+      if (!Array.isArray(SETTINGS.ageCategories)) SETTINGS.ageCategories = [...DEFAULT_SETTINGS.ageCategories];
+    } catch(e) {
+      SETTINGS = { eventTypes: [...DEFAULT_SETTINGS.eventTypes], ageCategories: [...DEFAULT_SETTINGS.ageCategories] };
+    }
+    renderLists();
+  }
+
+  function renderList(items, wrapId, onRemove){
+    const wrap = document.getElementById(wrapId);
+    if (!items.length) { wrap.innerHTML = '<div class="empty-note">none yet — add one below</div>'; return; }
+    wrap.innerHTML = '';
+    items.forEach((val, i) => {
+      const row = document.createElement('div');
+      row.className = 'chip-row';
+      row.innerHTML = '<input type="text" value="' + esc(val) + '"><button class="chip-remove" title="remove">✕</button>';
+      const input = row.querySelector('input');
+      input.addEventListener('input', () => { items[i] = input.value; });
+      row.querySelector('.chip-remove').addEventListener('click', () => { items.splice(i, 1); onRemove(); });
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderLists(){
+    renderList(SETTINGS.eventTypes, 'types-list', () => renderLists());
+    renderList(SETTINGS.ageCategories, 'cats-list', () => renderLists());
+  }
+
+  document.getElementById('add-type-btn').addEventListener('click', () => {
+    const input = document.getElementById('new-type-input');
+    const v = input.value.trim();
+    if (!v) return;
+    SETTINGS.eventTypes.push(v);
+    input.value = '';
+    renderLists();
+  });
+  document.getElementById('new-type-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('add-type-btn').click(); });
+
+  document.getElementById('add-cat-btn').addEventListener('click', () => {
+    const input = document.getElementById('new-cat-input');
+    const v = input.value.trim();
+    if (!v) return;
+    SETTINGS.ageCategories.push(v);
+    input.value = '';
+    renderLists();
+  });
+  document.getElementById('new-cat-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('add-cat-btn').click(); });
+
+  document.getElementById('btn-save-settings').addEventListener('click', async () => {
+    const note = document.getElementById('save-note');
+    note.textContent = 'Saving…'; note.style.color = 'var(--ink-faint)';
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const cleanTypes = SETTINGS.eventTypes.map(s => s.trim()).filter(Boolean);
+    const cleanCats = SETTINGS.ageCategories.map(s => s.trim()).filter(Boolean);
+    try {
+      const resp = await fetch(ADMIN_API + "/save-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ eventTypes: cleanTypes, ageCategories: cleanCats })
+      });
+      const data = await resp.json();
+      if (data.ok) { note.textContent = '✓ Saved'; note.style.color = 'var(--teal)'; }
+      else { note.textContent = '✕ Save failed'; note.style.color = 'var(--coral)'; }
+    } catch(e) { note.textContent = '✕ Save failed'; note.style.color = 'var(--coral)'; }
+    setTimeout(() => { note.textContent = ''; }, 3000);
+  });
+
+  loadSettings();
+
+  document.getElementById('rp-submit').addEventListener('click', async () => {
+    const note = document.getElementById('rp-note');
+    const cur = document.getElementById('rp-current').value;
+    const nw = document.getElementById('rp-new').value;
+    const confirm = document.getElementById('rp-confirm').value;
+    const savedPw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    if (!cur || !nw || !confirm) { note.textContent = 'Please fill in all three fields'; note.style.color = 'var(--coral)'; return; }
+    if (cur !== savedPw) { note.textContent = 'The current password is incorrect'; note.style.color = 'var(--coral)'; return; }
+    if (nw.length < 4) { note.textContent = 'The new password is too short (minimum 4 characters)'; note.style.color = 'var(--coral)'; return; }
+    if (nw !== confirm) { note.textContent = "The new passwords do not match"; note.style.color = 'var(--coral)'; return; }
+    note.textContent = 'Updating…'; note.style.color = 'var(--ink-faint)';
+    try {
+      const resp = await fetch(ADMIN_API + "/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": savedPw },
+        body: JSON.stringify({ newPassword: nw })
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        sessionStorage.setItem("jinswara_admin_pw", nw);
+        note.textContent = '✓ Password updated'; note.style.color = 'var(--teal)';
+        document.getElementById('rp-current').value = '';
+        document.getElementById('rp-new').value = '';
+        document.getElementById('rp-confirm').value = '';
+      } else {
+        note.textContent = '✕ ' + (data.error || 'update failed'); note.style.color = 'var(--coral)';
+      }
+    } catch(e) { note.textContent = '✕ Connection error'; note.style.color = 'var(--coral)'; }
+    setTimeout(() => { note.textContent = ''; }, 4000);
+  });
+  [document.getElementById('rp-current'), document.getElementById('rp-new'), document.getElementById('rp-confirm')].forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('rp-submit').click(); });
+  });
+</script>
+</body>
+</html>

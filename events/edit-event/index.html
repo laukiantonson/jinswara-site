@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JinSwara Events — Edit Event</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+
+  .shell { display:flex; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+
+  /* MAIN */
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+
+  .content { padding:28px 32px 60px; max-width:1200px; }
+
+  /* STAT CARDS */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+  .stat { background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 20px; }
+  .stat .n { font-size:26px; font-weight:800; font-family:'DM Sans'; }
+  .stat .l { font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .stat.c-coral .n { color:var(--coral); } .stat.c-teal .n { color:var(--teal); }
+  .stat.c-gold .n { color:var(--gold); } .stat.c-lav .n { color:var(--lavender); }
+
+  /* PANEL LAYOUT */
+  .panels { display:grid; grid-template-columns:1.15fr .85fr; gap:20px; align-items:start; }
+  .panel { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--card-border); }
+  .panel-head h3 { font-size:15px; font-weight:700; }
+  .btn-add { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--indigo),var(--violet));
+    color:#fff; font-size:13px; font-weight:700; padding:8px 15px; border-radius:9px; border:none; cursor:pointer; }
+
+  /* EVENTS LIST TABLE */
+  .ev-row { display:flex; align-items:center; gap:14px; padding:14px 22px; border-bottom:1px solid var(--card-border); }
+  .ev-row:last-child { border-bottom:none; }
+  .ev-thumb { width:44px; height:44px; border-radius:10px; flex:none;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 6px, rgba(255,255,255,.09) 6px, rgba(255,255,255,.09) 12px); }
+  .ev-info { flex:1; min-width:0; }
+  .ev-info .t { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ev-info .m { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+  .badge { font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; padding:4px 10px; border-radius:100px; flex:none; }
+  .badge.live { color:var(--coral); background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.3); }
+  .badge.past { color:var(--ink-faint); background:rgba(255,255,255,.05); border:1px solid var(--card-border); }
+  .ev-actions { display:flex; gap:6px; flex:none; }
+  .icon-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--card-border); background:transparent;
+    display:grid; place-items:center; cursor:pointer; color:var(--ink-dim); }
+  .icon-btn:hover { border-color:rgba(139,92,246,.4); color:var(--ink); }
+  .icon-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .icon-btn.danger:hover { border-color:rgba(255,107,107,.4); color:var(--coral); }
+
+  /* FORM */
+  .form-body { padding:20px 22px 24px; display:flex; flex-direction:column; gap:15px; }
+  .field label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-dim); margin-bottom:6px; }
+  .field input, .field select, .field textarea { width:100%; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    color:var(--ink); padding:10px 13px; border-radius:10px; font-size:13.5px; font-family:'Inter'; }
+  .field select option { color:#1a1a2e; background:#fff; }
+  .field textarea { resize:vertical; min-height:56px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .toggle-group { display:flex; gap:8px; }
+  .toggle-opt { flex:1; text-align:center; padding:9px; border-radius:9px; border:1px solid var(--card-border); font-size:12.5px; font-weight:600; color:var(--ink-faint); cursor:pointer; }
+  .toggle-opt.sel { background:rgba(139,92,246,.15); border-color:rgba(139,92,246,.4); color:var(--lavender); }
+  .dropzone { border:1.5px dashed var(--card-border); border-radius:12px; padding:22px 14px; text-align:center; color:var(--ink-faint); font-size:12.5px; }
+  .dropzone svg { width:22px; height:22px; stroke:var(--ink-faint); fill:none; stroke-width:1.6; margin-bottom:6px; }
+  .form-actions { display:flex; gap:10px; padding-top:4px; }
+  .edit-cols { grid-template-columns:1fr 1fr; }
+  .edit-cols .panel-span { grid-column:1 / -1; }
+  @media (max-width: 900px) { .edit-cols { grid-template-columns:1fr; } }
+  .btn-save { flex:1; background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal)); color:#fff; font-weight:700;
+    font-size:13.5px; padding:11px; border-radius:10px; border:none; cursor:pointer; }
+  .btn-cancel { padding:11px 18px; border-radius:10px; border:1px solid var(--card-border); background:transparent; color:var(--ink-dim); font-size:13.5px; font-weight:600; cursor:pointer; }
+
+  /* MEDIA LINKS */
+  .link-count { font-size:11.5px; color:var(--ink-faint); font-weight:600; flex:none; display:flex; align-items:center; gap:3px; }
+  .btn-add-links { margin-top:8px; background:rgba(139,92,246,.14); border:1px solid rgba(139,92,246,.35); color:var(--lavender);
+    font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:9px; cursor:pointer; }
+  .btn-add-links:hover { background:rgba(139,92,246,.22); }
+  .media-link-hint { font-size:11px; color:var(--ink-faint); margin-top:8px; }
+  /* ── social post picker ── */
+  .btn-social-pick { margin-top:8px; margin-left:8px; background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.35); color:var(--teal);
+    font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:9px; cursor:pointer; }
+  .btn-social-pick:hover { background:rgba(45,212,191,.2); }
+  .sp-overlay { position:fixed; inset:0; background:rgba(5,8,20,.72); backdrop-filter:blur(4px); z-index:60; display:none; align-items:center; justify-content:center; padding:18px; }
+  .sp-overlay.open { display:flex; }
+  .sp-modal { background:var(--card, #10142a); border:1px solid var(--card-border); border-radius:16px; width:100%; max-width:1100px; height:min(88vh, 980px); max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+  .sp-head { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--card-border); }
+  .sp-title { font-weight:800; font-size:14.5px; }
+  .sp-close { background:transparent; border:none; color:var(--ink-faint); font-size:18px; cursor:pointer; }
+  .sp-tabs { display:flex; gap:8px; padding:12px 18px 0; }
+  .sp-tab { padding:8px 16px; border-radius:9px; border:1px solid var(--card-border); background:transparent; color:var(--ink-faint); font-size:12.5px; font-weight:700; cursor:pointer; }
+  .sp-tab.sel { background:rgba(139,92,246,.15); border-color:rgba(139,92,246,.4); color:var(--lavender); }
+  .sp-toolbar { display:flex; align-items:center; justify-content:space-between; padding:10px 18px; }
+  .sp-status { font-size:11.5px; color:var(--ink-faint); }
+  .sp-search { flex:1; min-width:0; margin:0 10px; background:rgba(255,255,255,.05); border:1px solid var(--card-border); color:var(--ink); font-size:12.5px; padding:7px 12px; border-radius:8px; outline:none; }
+  .sp-search:focus { border-color:rgba(45,212,191,.45); }
+  .sp-refresh { background:transparent; border:1px solid var(--card-border); color:var(--ink-faint); font-size:11.5px; padding:6px 12px; border-radius:8px; cursor:pointer; }
+  /* grid-auto-rows:max-content — REQUIRED: .sp-card{overflow:hidden} makes cards scroll
+     containers whose grid automatic minimum size is 0, so auto rows collapse to share the
+     grid's fixed height (cards squashed to ~89px) once enough cards render. max-content
+     rows always size to card content, restoring portrait cards + scrolling. */
+  .sp-grid { flex:1; min-height:0; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); grid-auto-rows:max-content; gap:14px; padding:6px 18px 16px; align-content:start; scrollbar-width:thin; scrollbar-color:rgba(139,92,246,.75) rgba(255,255,255,.05); }
+  .sp-grid::-webkit-scrollbar { width:11px; }
+  .sp-grid::-webkit-scrollbar-track { background:rgba(255,255,255,.04); border-radius:10px; margin:4px 0; }
+  .sp-grid::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#6366f1,#8b5cf6,#2dd4bf); border-radius:10px; border:2px solid #10142a; }
+  .sp-grid::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#818cf8,#a78bfa,#5eead4); }
+  .sp-more { grid-column:1/-1; margin:6px auto 4px; padding:9px 26px; border-radius:10px; border:1px solid rgba(45,212,191,.35); background:rgba(45,212,191,.12); color:var(--teal); font-weight:700; font-size:13px; cursor:pointer; }
+  .sp-more:hover { background:rgba(45,212,191,.2); }
+  .sp-card { position:relative; border:2px solid var(--card-border); border-radius:14px; overflow:hidden; cursor:pointer; background:rgba(255,255,255,.03); }
+  .sp-imgwrap { position:relative; width:100%; height:300px; background:#070a18; isolation:isolate; }
+  .sp-imgwrap img { width:100%; height:100%; object-fit:contain; display:block; position:relative; z-index:1; }
+  .sp-imgwrap img.sp-imgbg { position:absolute; inset:0; z-index:0; object-fit:cover; filter:blur(16px) saturate(1.15); opacity:.45; transform:scale(1.12); }
+  .sp-vid { position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,.65); color:#fff; font-size:10px; font-weight:700; padding:3px 7px; border-radius:6px; }
+  .sp-card .sp-body { display:flex; flex-direction:column; gap:7px; padding:10px 12px 12px; }
+  .sp-card .sp-cap { font-size:12px; color:var(--ink-dim); line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .sp-card .sp-cap.empty { font-style:italic; color:var(--ink-faint); }
+  .sp-meta { display:flex; align-items:center; gap:8px; }
+  .sp-plat { font-size:10px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; padding:3px 8px; border-radius:6px; }
+  .sp-plat.ig { background:linear-gradient(135deg,rgba(244,114,182,.2),rgba(251,191,36,.2)); color:#f9a8d4; border:1px solid rgba(244,114,182,.35); }
+  .sp-plat.yt { background:rgba(239,68,68,.15); color:#fca5a5; border:1px solid rgba(239,68,68,.35); }
+  .sp-date { font-size:11px; color:var(--ink-faint); }
+  .sp-link { font-size:11px; color:var(--teal); text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
+  .sp-link:hover { text-decoration:underline; }
+  .sp-card .sp-selbtn { position:absolute; top:8px; left:8px; width:26px; height:26px; border-radius:50%; border:2px solid rgba(255,255,255,.7); background:rgba(0,0,0,.4); cursor:pointer; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.65); font-size:13px; line-height:1; padding:0; }
+  .sp-card.sel .sp-selbtn { background:var(--teal); border-color:var(--teal); color:#04202b; font-weight:900; }
+  .spv-overlay { position:fixed; inset:0; background:rgba(3,5,14,.85); backdrop-filter:blur(6px); z-index:70; display:none; align-items:center; justify-content:center; padding:20px; }
+  .spv-overlay.open { display:flex; }
+  .spv-box { max-width:min(920px,94vw); width:100%; background:#0d1126; border:1px solid var(--card-border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; max-height:92vh; }
+  .spv-box img { width:100%; max-height:62vh; object-fit:contain; background:#000; display:block; }
+  .spv-body { padding:14px 18px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(139,92,246,.75) rgba(255,255,255,.05); }
+  .spv-body::-webkit-scrollbar { width:11px; }
+  .spv-body::-webkit-scrollbar-track { background:rgba(255,255,255,.04); border-radius:10px; }
+  .spv-body::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#6366f1,#8b5cf6,#2dd4bf); border-radius:10px; border:2px solid #10142a; }
+  .spv-title { font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.45; }
+  .spv-foot { display:flex; gap:10px; padding:12px 18px; border-top:1px solid var(--card-border); }
+  .spv-select { flex:1; background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal)); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:700; font-size:13px; cursor:pointer; }
+  .spv-close2 { padding:11px 18px; border-radius:10px; border:1px solid var(--card-border); background:transparent; color:var(--ink-dim); font-size:13px; cursor:pointer; }
+  .sp-card.sel { border-color:var(--teal); box-shadow:0 0 0 2px rgba(45,212,191,.25); }
+  .sp-card .sp-check { position:absolute; top:8px; right:8px; width:22px; height:22px; border-radius:50%; background:var(--teal); color:#04202b; font-size:13px; font-weight:900; display:none; align-items:center; justify-content:center; }
+  .sp-card.sel .sp-check { display:flex; }
+  .sp-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 18px; border-top:1px solid var(--card-border); }
+  .sp-count { font-size:12px; color:var(--ink-faint); font-weight:600; }
+  .sp-add { background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal)); color:#fff; font-weight:700; border:none; font-size:13px; padding:10px 22px; border-radius:10px; cursor:pointer; }
+  .sp-add:disabled { opacity:.4; cursor:default; }
+  .sp-loading { grid-column:1/-1; text-align:center; color:var(--ink-faint); font-size:12.5px; padding:30px 0; }
+  .media-link-list { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .media-link-empty { font-size:12.5px; color:var(--ink-faint); font-style:italic; padding:10px 2px; }
+  .media-link-row { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    border-radius:10px; padding:8px 10px; }
+  .ml-platform { flex:none; width:26px; height:26px; border-radius:7px; display:grid; place-items:center; font-size:12px; font-weight:800; }
+  .ml-platform.youtube { background:rgba(255,107,107,.15); color:#ff5c5c; }
+  .ml-platform.instagram { background:linear-gradient(135deg,#f472b6,#fbbf24); color:#fff; }
+  .ml-platform.other { background:rgba(255,255,255,.08); color:var(--ink-faint); }
+  .ml-url { flex:1; min-width:0; font-size:12.5px; color:var(--ink-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ml-controls { display:flex; gap:3px; flex:none; }
+  /* JUDGES PANEL */
+  .jury-add-form { display:flex; flex-direction:column; gap:8px; margin-top:8px; background:rgba(255,255,255,.02); border:1px solid var(--card-border); border-radius:12px; padding:12px; }
+  .jury-add-form input[type=text], .jury-add-form textarea { width:100%; }
+  .jury-add-form textarea { min-height:52px; resize:vertical; }
+  .jury-list { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .jury-empty { font-size:12.5px; color:var(--ink-faint); font-style:italic; padding:10px 2px; }
+  .jury-row { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    border-radius:10px; padding:10px 12px; }
+  .jury-avatar { flex:none; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--pink));
+    display:grid; place-items:center; font-size:13px; font-weight:800; color:#fff; overflow:hidden; }
+  .jury-avatar img { width:100%; height:100%; object-fit:cover; }
+  .jury-info { flex:1; min-width:0; }
+  .jury-info .jn { font-size:13.5px; font-weight:700; color:var(--ink); }
+  .jury-info .je { font-size:11.5px; color:var(--teal); font-weight:600; margin-top:1px; }
+  .jury-info .jb { font-size:11.5px; color:var(--ink-faint); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .jury-controls { display:flex; gap:3px; flex:none; }
+  .ml-btn { width:24px; height:24px; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--ink-faint);
+    display:grid; place-items:center; cursor:pointer; font-size:11px; line-height:1; }
+  .ml-btn:hover { border-color:rgba(139,92,246,.4); color:var(--ink); }
+  .ml-btn.ml-remove:hover { border-color:rgba(255,107,107,.4); color:var(--coral); }
+  .ml-btn:disabled { opacity:.25; cursor:default; }
+  #media-links-editing-tag { font-weight:700; color:var(--teal); text-transform:none; letter-spacing:0; }
+
+  /* MOBILE — sidebar collapses to a horizontal scrollable tab bar so nav links
+     (incl. Events) never overflow off-screen or require horizontal scrolling */
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+.icon-btn{width:40px;height:40px;}
+input[type="checkbox"]{width:20px !important;height:20px !important;min-width:20px;}
+.stats{grid-template-columns:repeat(2,1fr) !important;}.stat{min-width:0;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+<!-- social post picker modal -->
+<div class="sp-overlay" id="sp-overlay">
+  <div class="sp-modal">
+    <div class="sp-head">
+      <div class="sp-title">Pick from Social</div>
+      <button type="button" class="sp-close" id="sp-close-btn">✕</button>
+    </div>
+    <div class="sp-tabs">
+      <button type="button" class="sp-tab sel" data-platform="instagram">Instagram</button>
+      <button type="button" class="sp-tab" data-platform="youtube">YouTube</button>
+    </div>
+    <div class="sp-toolbar">
+      <div class="sp-status" id="sp-status"></div>
+      <input type="text" class="sp-search" id="sp-search" placeholder="search posts…" autocomplete="off">
+      <button type="button" class="sp-refresh" id="sp-refresh-btn">↻ Refresh</button>
+    </div>
+    <div class="sp-grid" id="sp-grid"></div>
+    <div class="sp-foot">
+      <div class="sp-count" id="sp-count">click posts to select</div>
+      <button type="button" class="sp-add" id="sp-add-btn" disabled>Add Selected Links</button>
+    </div>
+  </div>
+</div>
+
+<!-- big preview lightbox -->
+<div class="spv-overlay" id="spv-overlay">
+  <div class="spv-box">
+    <img id="spv-img" src="" alt="">
+    <div class="spv-body"><div class="spv-title" id="spv-title"></div></div>
+    <div class="spv-foot">
+      <button type="button" class="spv-select" id="spv-select-btn">Select</button>
+      <button type="button" class="spv-close2" id="spv-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+(function(){
+  document.getElementById("admin-auth-btn").addEventListener("click", tryLogin);
+  document.getElementById("admin-auth-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") tryLogin(); });
+
+  async function verifyPw(pw) {
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: pw}) });
+      const data = await resp.json();
+      return !!data.ok;
+    } catch(e) { return false; }
+  }
+
+  async function tryLogin() {
+    const pw = document.getElementById("admin-auth-pw").value;
+    const errEl = document.getElementById("admin-auth-err");
+    errEl.textContent = "Checking…";
+    const ok = await verifyPw(pw);
+    if (ok) {
+      sessionStorage.setItem("jinswara_admin_pw", pw);
+      document.getElementById("admin-auth-gate").style.display = "none";
+    } else {
+      errEl.textContent = "Incorrect password";
+    }
+  }
+
+    // Optimistic unlock — hide the gate immediately if a cached password exists so
+  // refreshing the page never flashes the login screen for an already-authed admin.
+  // Still re-validate against the server in the background: a stale/rotated
+  // password gets caught and the gate re-shown, it just no longer blocks on every load.
+  (function(){
+    if (sessionStorage.getItem("jinswara_admin_pw")) {
+      document.getElementById("admin-auth-gate").style.display = "none";
+    }
+  })();
+  (async () => {
+    const saved = sessionStorage.getItem("jinswara_admin_pw");
+    if (saved) {
+      const ok = await verifyPw(saved);
+      if (!ok) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        document.getElementById("admin-auth-gate").style.display = "flex";
+      }
+    }
+  })();
+})();
+</script>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a class="active" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1 id="form-title">Edit Event</h1><div style="display:flex;align-items:center;gap:14px;margin-top:6px;"><a href="admin-panel" style="color:var(--ink-dim);text-decoration:none;font-size:13px;">&larr; Back to Events</a><button class="btn-save" id="btn-save-event" style="flex:none;padding:8px 22px;font-size:13px;">Save Event</button></div></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="panels edit-cols">
+        <div class="panel">
+          <div class="panel-head"><h3>Event Details</h3></div>
+          <div class="form-body">
+            <div class="field" id="ev-locked-banner" style="display:none;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:10px;padding:12px 14px;align-items:center;justify-content:space-between;">
+              <span style="font-size:12.5px;color:var(--coral);font-weight:600;">🔒 locked — winners announced, editing disabled to prevent accidents</span>
+              <button type="button" class="btn-cancel" id="btn-unlock-event" style="padding:6px 12px;font-size:12px;">Unlock</button>
+            </div>
+            <div class="field"><label>Event Title</label><input type="text" id="ev-title-input" placeholder="e.g. Kavya Srajan — Poetry Contest"></div>
+            <div class="row2">
+              <div class="field"><label>Event Type</label><select id="ev-type-select"></select></div>
+              <div class="field"><label>Status</label>
+                <div class="toggle-group" id="ev-status-toggle">
+                  <div class="toggle-opt sel" data-val="ongoing">Ongoing</div>
+                  <div class="toggle-opt" data-val="upcoming">Upcoming</div>
+                  <div class="toggle-opt" data-val="past">Past</div>
+                </div>
+              </div>
+            </div>
+            <div class="field"><label>Last Date to Submit</label><input type="date" id="ev-lastdate-input"></div>
+            <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="ev-winners-checkbox" style="width:auto;"> Winners Announced <span style="color:var(--ink-faint);font-weight:400;">(auto-locks the event once status is Past)</span></label></div>
+            <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="ev-winners-soon-checkbox" style="width:auto;"> Show &quot;Winners to be announced soon&quot; on the event page</label></div>
+            <div class="field"><label>Age Category</label><div id="ev-agecat-checks" style="display:flex;flex-wrap:wrap;gap:8px;"></div></div>
+            <div class="field"><label>Banner Image</label>
+              <div class="dropzone" id="ev-banner-dropzone"><svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><br><span id="ev-banner-label">Drag a banner image here or click to upload</span><input type="file" id="ev-banner-input" accept="image/*" style="display:none;"></div>
+            </div>
+            <div class="field"><label>Submit Entry Form URL</label><input type="text" id="ev-formurl-input" placeholder="https://forms.gle/..."></div>
+            <div class="field"><label>Description / Rules</label><textarea id="ev-desc-textarea" placeholder="Short description, eligibility, age category, rules..."></textarea><div style="font-size:11.5px;color:var(--ink-faint,#8a8a93);margin-top:5px;">Markdown supported &mdash; **bold**, *italic*, # heading, - list, [link](url)</div></div>
+            <div class="field" id="jury-panel-field">
+              <label>Judges Panel <span id="jury-editing-tag"></span></label>
+              <div class="jury-add-form" id="jury-add-form">
+                <input type="text" id="jury-name-input" placeholder="Judge name">
+                <input type="text" id="jury-expertise-input" placeholder="Expertise / role (e.g. Senior Poet)">
+                <textarea id="jury-bio-textarea" placeholder="Short bio (optional)"></textarea>
+                <div class="dropzone" id="jury-photo-dropzone" style="padding:14px;"><span id="jury-photo-label">Click to upload judge photo (optional)</span><input type="file" id="jury-photo-input" accept="image/*" style="display:none;"></div>
+                <button type="button" class="btn-add-links" id="jury-add-btn" style="align-self:flex-start;">+ Add Judge</button>
+              </div>
+              <div class="jury-list" id="jury-list"><div class="jury-empty" id="jury-empty">no judges added yet</div></div>
+            </div>
+            <div class="field" id="winners-field">
+              <label>Winners <span id="winners-editing-tag"></span></label>
+              <div class="jury-add-form" id="winner-add-form">
+                <input type="text" id="winner-position-input" placeholder="Position (e.g. 1st, 2nd)">
+                <input type="text" id="winner-name-input" placeholder="Participant name">
+                <div class="row2">
+                  <input type="text" id="winner-city-input" placeholder="City">
+                  <select id="winner-agecat-select"><option value="">Age Category (optional)</option></select>
+                </div>
+                <div class="row2">
+                  <select id="winner-entrytype-select">
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="audio">Audio</option>
+                    <option value="link">Link</option>
+                  </select>
+                  <input type="text" id="winner-entry-input" placeholder="Entry content / link">
+                </div>
+                <div class="dropzone" id="winner-image-dropzone" style="padding:14px;display:none;"><span id="winner-image-label">Click to upload winning entry image (optional — or paste a link above)</span><input type="file" id="winner-image-input" accept="image/*" style="display:none;"></div>
+                <button type="button" class="btn-add-links" id="winner-add-btn" style="align-self:flex-start;">+ Add Winner</button>
+              </div>
+              <div class="jury-list" id="winner-list"><div class="jury-empty" id="winner-empty">no winners added yet</div></div>
+            </div>
+            <div class="field" id="featured-field">
+              <label>Featured Entries <span id="featured-editing-tag"></span></label>
+              <div style="font-size:11.5px;color:var(--ink-faint);margin:-2px 0 8px;">These entries appear in the Featured Entries gallery on the public event page.</div>
+              <div class="jury-add-form" id="featured-add-form">
+                <input type="text" id="featured-name-input" placeholder="Participant name">
+                <input type="text" id="featured-city-input" placeholder="City">
+                <input type="text" id="featured-image-url-input" placeholder="Entry image link (or upload below)">
+                <div class="dropzone" id="featured-image-dropzone" style="padding:14px;"><span id="featured-image-label">Click to upload the entry image (or paste a link above)</span><input type="file" id="featured-image-input" accept="image/*" style="display:none;"></div>
+                <button type="button" class="btn-add-links" id="featured-add-btn" style="align-self:flex-start;">+ Add Featured Entry</button>
+              </div>
+              <div class="jury-list" id="featured-list"><div class="jury-empty" id="featured-empty">no featured entries added yet</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Media Links</h3></div>
+          <div class="form-body">
+            <div class="field" id="media-links-field">
+              <label>Event Media &amp; Documents (YouTube / Instagram / PDF) <span id="media-links-editing-tag"></span></label>
+              <input type="text" id="media-link-input" placeholder="paste a YouTube or Instagram link, press Enter to add">
+              <button type="button" class="btn-add-links" id="media-link-add-btn">+ Add</button><button type="button" class="btn-social-pick" id="social-pick-btn">✦ Pick from Social</button>
+              <div class="dropzone" id="doc-dropzone" style="padding:12px;margin-top:8px;"><span id="doc-drop-label">📄 Click to upload a PDF / document (rules, results, etc.)</span><input type="file" id="doc-file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" style="display:none;"></div>
+              <div class="media-link-list" id="media-link-list"><div class="media-link-empty" id="media-link-empty">no links added yet</div></div>
+              <div class="media-link-hint">drag or use ↑↓ to reorder — this order is how they'll appear on the event page</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-span">
+          <div class="form-body" style="padding:16px 22px;">
+            <div class="form-actions">
+              <button class="btn-cancel" id="btn-cancel-event">Cancel</button>
+              <button class="btn-cancel" id="btn-delete-event" style="display:none;border-color:rgba(255,107,107,.3);color:var(--coral);">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // ── Events admin — live, backed by Supabase Storage (events-data/events.json) ──
+  const EVENTS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/events.json";
+  const SETTINGS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/settings.json";
+  const DEFAULT_SETTINGS = { eventTypes: ["Kavya","Recitation","Quiz","Essay"], ageCategories: ["Bal Varg","Yuva Varg","Praudh Varg","Open Category"] };
+  let EVENTS = [];
+  let SETTINGS = { eventTypes: [], ageCategories: [] };
+  let currentEventId = null; // event being edited (media links + form)
+  let bannerDataUrl = null;
+
+  function esc(s){ return (s||'').toString().replace(/</g,'&lt;'); }
+
+  async function loadSettings(){
+    try {
+      const resp = await fetch(SETTINGS_URL + "?t=" + Date.now());
+      if (!resp.ok) throw new Error('no settings yet');
+      SETTINGS = await resp.json();
+      if (!Array.isArray(SETTINGS.eventTypes)) SETTINGS.eventTypes = [...DEFAULT_SETTINGS.eventTypes];
+      if (!Array.isArray(SETTINGS.ageCategories)) SETTINGS.ageCategories = [...DEFAULT_SETTINGS.ageCategories];
+    } catch(e) {
+      SETTINGS = { eventTypes: [...DEFAULT_SETTINGS.eventTypes], ageCategories: [...DEFAULT_SETTINGS.ageCategories] };
+    }
+    const typeSel = document.getElementById('ev-type-select');
+    typeSel.innerHTML = SETTINGS.eventTypes.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    const catsWrap = document.getElementById('ev-agecat-checks');
+    catsWrap.innerHTML = SETTINGS.ageCategories.map(c =>
+      `<label style="display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-dim);background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:8px;padding:6px 10px;cursor:pointer;">
+        <input type="checkbox" class="ev-agecat-cb" value="${esc(c)}" style="width:auto;">${esc(c)}
+      </label>`
+    ).join('');
+    const winnerCatSel = document.getElementById('winner-agecat-select');
+    winnerCatSel.innerHTML = '<option value="">Age Category (optional)</option>' + SETTINGS.ageCategories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  }
+
+  async function loadEvents(){
+    try {
+      const resp = await fetch(EVENTS_URL + "?t=" + Date.now());
+      EVENTS = await resp.json();
+    } catch(e) { console.error('failed to load events', e); EVENTS = []; }
+    renderRows();
+    updateStats();
+  }
+
+  function renderRows(){
+    const wrap = document.getElementById('ev-rows');
+    if (!wrap) return;
+    const statusRank = { ongoing: 0, upcoming: 1, past: 2 };
+    const activeEvents = EVENTS.slice().sort((a, b) => (statusRank[a.status] ?? 3) - (statusRank[b.status] ?? 3));
+    if (!activeEvents.length) { wrap.innerHTML = '<div style="padding:22px;color:var(--ink-faint);font-size:13px;">no events yet — add one on the right</div>'; return; }
+    wrap.innerHTML = activeEvents.map(ev => {
+      const badge = ev.status === 'ongoing' ? '<span class="badge live">Live</span>' : ev.status === 'upcoming' ? '<span class="badge past">Upcoming</span>' : '<span class="badge past">Past</span>';
+      const meta = ev.status === 'ongoing' ? ('closes ' + (ev.lastDateOfSubmission || '—')) : ev.status === 'upcoming' ? ('opens ' + [ev.month, ev.year].filter(Boolean).join(' ')) : 'completed';
+      const linkCount = (ev.mediaLinks || []).length;
+      return `<div class="ev-row" data-event-id="${esc(ev.eventId)}">
+        <div class="ev-thumb"${ev.bannerImageUrl ? ` style="background-image:url('${esc(ev.bannerImageUrl)}');background-size:cover;"` : ''}></div>
+        <div class="ev-info"><div class="t">${ev.locked ? '🔒 ' : ''}${esc(ev.title && ev.title.en)}</div><div class="m">${esc(ev.status)} · ${esc(meta)}</div></div>
+        <span class="link-count">${linkCount ? '🔗 ' + linkCount : ''}</span>
+        ${badge}
+        <div class="ev-actions">
+          <button class="icon-btn ev-edit-btn" data-id="${esc(ev.eventId)}"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          <button class="icon-btn danger ev-del-btn" data-id="${esc(ev.eventId)}"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+        </div>
+      </div>`;
+    }).join('');
+    wrap.querySelectorAll('.ev-edit-btn').forEach(btn => btn.addEventListener('click', () => editEvent(btn.dataset.id)));
+    wrap.querySelectorAll('.ev-del-btn').forEach(btn => btn.addEventListener('click', () => deleteEvent(btn.dataset.id)));
+  }
+
+  function updateStats(){
+    if (!document.getElementById('stat-ongoing')) return;
+    document.getElementById('stat-ongoing').textContent = EVENTS.filter(e => e.status === 'ongoing').length;
+    document.getElementById('stat-upcoming').textContent = EVENTS.filter(e => e.status === 'upcoming').length;
+    document.getElementById('stat-past').textContent = EVENTS.filter(e => e.status === 'past').length;
+    document.getElementById('stat-media-links').textContent = EVENTS.reduce((sum, e) => sum + ((e.mediaLinks || []).length), 0);
+  }
+
+  async function persistEvents(){
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    try {
+      const resp = await fetch(ADMIN_API + "/save-events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ events: EVENTS })
+      });
+      let data = null; try { data = await resp.json(); } catch(e) {}
+      if (resp.status === 401) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        const npw = prompt("Your admin session has expired. Please re-enter the admin password to save your change:");
+        if (npw && npw.trim()) {
+          sessionStorage.setItem("jinswara_admin_pw", npw.trim());
+          return persistEvents();
+        }
+        showSaveStatus(false, "session expired — change NOT saved");
+        return false;
+      }
+      const ok = !!(data && data.ok);
+      showSaveStatus(ok, ok ? "" : ((data && data.error) ? String(data.error).slice(0, 120) : ("server error " + resp.status)));
+      return ok;
+    } catch(e) { showSaveStatus(false, "network error — check connection"); return false; }
+  }
+  function showSaveStatus(ok, detail){
+    let el = document.getElementById('save-status-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'save-status-toast';
+      el.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:9998;transition:opacity .3s;';
+      document.body.appendChild(el);
+    }
+    el.textContent = ok ? '✓ Saved to database' : ('✕ Save failed' + (detail ? ' — ' + detail : '') + ' · click to retry');
+    if (!ok) { el.style.cursor = 'pointer'; el.onclick = () => { el.onclick = null; persistEvents(); }; }
+    else { el.style.cursor = ''; el.onclick = null; }
+    el.style.background = ok ? 'rgba(45,212,191,.15)' : 'rgba(255,107,107,.15)';
+    el.style.color = ok ? '#2dd4bf' : '#ff6b6b';
+    el.style.border = '1px solid ' + (ok ? 'rgba(45,212,191,.35)' : 'rgba(255,107,107,.35)');
+    el.style.opacity = '1';
+    setTimeout(() => { el.style.opacity = '0'; }, ok ? 2200 : 8000);
+  }
+
+  function detectPlatform(url) {
+    if (/youtu\.?be/i.test(url)) return 'youtube';
+    if (/instagram\.com/i.test(url)) return 'instagram';
+    if (/\.(pdf|docx?|pptx?|xlsx?)(\?|#|$)/i.test(url)) return 'document';
+    return 'other';
+  }
+
+  // On a brand-new event, currentEventId is null until "Save Event" is clicked —
+  // so adding judges/winners/media-links before that silently no-ops (no event to
+  // attach to). Auto-create a minimal event shell on first add so nothing is lost.
+  async function ensureEventExists() {
+    if (currentEventId) return true;
+    const title = document.getElementById('ev-title-input').value.trim();
+    if (!title) { document.getElementById('ev-title-input').focus(); alert('enter an event title first, then add judges/winners/links'); return false; }
+    const status = document.querySelector('#ev-status-toggle .toggle-opt.sel').dataset.val;
+    const eventType = document.getElementById('ev-type-select').value;
+    const ageCategory = Array.from(document.querySelectorAll('.ev-agecat-cb:checked')).map(cb => cb.value);
+    const newId = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + (EVENTS.length+1);
+    EVENTS.unshift({
+      eventId: newId,
+      title: { en: title }, status, year: new Date().getFullYear(), month: '',
+      eventType, ageCategory, lastDateOfSubmission: document.getElementById('ev-lastdate-input').value || '',
+      description: { en: '' }, rules: [], juryPanel: [],
+      results: { winners: [], participants: [], gallery: [], winnersAnnounced: false },
+      bannerImageUrl: '', form_url: document.getElementById('ev-formurl-input').value.trim() || '', mediaLinks: [], locked: false
+    });
+    currentEventId = newId;
+    renderRows();
+    updateStats();
+    document.getElementById('form-title').textContent = 'Edit Event';
+    document.getElementById('media-links-editing-tag').textContent = '— editing: ' + title;
+    document.getElementById('jury-editing-tag').textContent = '— editing: ' + title;
+    document.getElementById('winners-editing-tag').textContent = '— editing: ' + title;
+    document.getElementById('featured-editing-tag').textContent = '— editing: ' + title;
+    await persistEvents();
+    return true;
+  }
+
+  function renderMediaLinks() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const links = ev ? (ev.mediaLinks || []) : [];
+    const list = document.getElementById('media-link-list');
+    const empty = document.getElementById('media-link-empty');
+    list.querySelectorAll('.media-link-row').forEach(r => r.remove());
+    if (!links.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    links.forEach((link, i) => {
+      const row = document.createElement('div');
+      row.className = 'media-link-row';
+      if (i === editingLinkIndex) {
+        row.innerHTML =
+          '<input type="text" class="ml-edit-input" value="' + esc(link.url) + '" style="flex:1;min-width:0;font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+          '<div class="ml-controls">' +
+            '<button type="button" class="ml-btn ml-save">✓</button>' +
+            '<button type="button" class="ml-btn ml-cancel">✕</button>' +
+          '</div>';
+        const input = row.querySelector('.ml-edit-input');
+        row.querySelector('.ml-save').onclick = () => {
+          const v = input.value.trim();
+          if (v) { link.url = v; link.platform = detectPlatform(v); }
+          editingLinkIndex = null; renderMediaLinks();
+        };
+        row.querySelector('.ml-cancel').onclick = () => { editingLinkIndex = null; renderMediaLinks(); };
+      } else {
+        const iconLabel = link.platform === 'youtube' ? 'YT' : link.platform === 'instagram' ? 'IG' : link.platform === 'document' ? '📄' : '🔗';
+        row.innerHTML =
+          '<div class="ml-platform ' + link.platform + '">' + iconLabel + '</div>' +
+          '<div class="ml-url">' + (link.label ? esc(link.label) + ' · ' : '') + esc(link.url) + '</div>' +
+          '<div class="ml-controls">' +
+            '<button type="button" class="ml-btn ml-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn ml-down" ' + (i === links.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn ml-edit">✎</button>' +
+            '<button type="button" class="ml-btn ml-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.ml-up').onclick = () => { if (i > 0) { [links[i-1], links[i]] = [links[i], links[i-1]]; renderMediaLinks(); } };
+        row.querySelector('.ml-down').onclick = () => { if (i < links.length - 1) { [links[i+1], links[i]] = [links[i], links[i+1]]; renderMediaLinks(); } };
+        row.querySelector('.ml-edit').onclick = () => { editingLinkIndex = i; renderMediaLinks(); };
+        row.querySelector('.ml-remove').onclick = () => { links.splice(i, 1); renderMediaLinks(); };
+      }
+      list.appendChild(row);
+    });
+  }
+  let editingLinkIndex = null;
+
+  document.getElementById('media-link-add-btn').onclick = async () => {
+    const inp = document.getElementById('media-link-input');
+    const lines = inp.value.split(/[\n,]+/).map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return;
+    if (!(await ensureEventExists())) return;
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.mediaLinks) ev.mediaLinks = [];
+    lines.forEach(url => ev.mediaLinks.push({ url, platform: detectPlatform(url) }));
+    inp.value = '';
+    renderMediaLinks();
+  };
+
+  // ── PDF / document upload → Supabase event-media → mediaLinks entry ──
+  document.getElementById('doc-dropzone').addEventListener('click', () => document.getElementById('doc-file-input').click());
+  document.getElementById('doc-file-input').addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 25 * 1024 * 1024) { alert('File too large — please keep documents under 25 MB.'); e.target.value = ''; return; }
+    if (!(await ensureEventExists())) { e.target.value = ''; return; }
+    const lbl = document.getElementById('doc-drop-label');
+    lbl.textContent = 'Uploading ' + file.name + '…';
+    try {
+      const buf = await file.arrayBuffer();
+      let bin = ''; const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      const b64 = btoa(bin);
+      const pw = sessionStorage.getItem('jinswara_admin_pw') || '';
+      const resp = await fetch(ADMIN_API + '/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': pw },
+        body: JSON.stringify({ filename: file.name, dataBase64: b64, contentType: file.type || 'application/pdf' })
+      });
+      const data = await resp.json();
+      if (!data.ok || !data.url) throw new Error(data.error || 'upload failed');
+      const ev = EVENTS.find(ev2 => ev2.eventId === currentEventId);
+      if (!ev.mediaLinks) ev.mediaLinks = [];
+      ev.mediaLinks.push({ url: data.url, platform: 'document', label: file.name });
+      renderMediaLinks();
+      await persistEvents();
+      lbl.textContent = '📄 ' + file.name + ' uploaded — click to add another';
+    } catch(err) {
+      lbl.textContent = '📄 Upload failed — click to retry';
+      alert('Document upload failed: ' + (err && err.message ? err.message : err));
+    }
+    e.target.value = '';
+  });
+  document.getElementById('media-link-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('media-link-add-btn').click(); }
+  });
+
+  // ── social post picker ──
+  const SP = { platform: 'instagram', selected: {}, cache: {}, shown: 0, PAGE: 20 };
+
+  function spEl(id) { return document.getElementById(id); }
+
+  function spVisiblePosts() {
+    const d = SP.cache[SP.platform];
+    if (!d) return [];
+    const q = (spEl('sp-search').value || '').toLowerCase().trim();
+    return q ? (d.posts || []).filter(p => (p.title || '').toLowerCase().includes(q)) : (d.posts || []);
+  }
+
+  function spRenderGrid(reset) {
+    const grid = spEl('sp-grid');
+    if (reset) { grid.innerHTML = ''; SP.shown = 0; }
+    const posts = spVisiblePosts();
+    if (!posts.length) { grid.innerHTML = '<div class="sp-loading">no posts found</div>'; return; }
+    const oldBtn = spEl('sp-more-btn');
+    if (oldBtn) oldBtn.remove();
+    posts.slice(SP.shown, SP.shown + SP.PAGE).forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'sp-card' + (SP.selected[p.url] ? ' sel' : '');
+      const platCls = SP.platform === 'youtube' ? 'yt' : 'ig';
+      const platLabel = SP.platform === 'youtube' ? 'YouTube' : 'Instagram';
+      let dateStr = '';
+      if (p.published) { try { dateStr = new Date(p.published).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) {} }
+      const shortUrl = (p.url || '').replace(/^https?:\/\/(www\.)?/, '');
+      card.innerHTML = '<div class="sp-imgwrap"><img class="sp-imgbg" src="' + esc(p.thumb) + '" loading="lazy" referrerpolicy="no-referrer" aria-hidden="true" onerror="this.style.display=\'none\'"><img src="' + esc(p.thumb) + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=.15">' +
+        (p.isVideo ? '<div class="sp-vid">▶ video</div>' : '') + '</div>' +
+        '<button type="button" class="sp-selbtn" title="select">✓</button>' +
+        '<div class="sp-body">' +
+          (p.title ? '<div class="sp-cap">' + esc(p.title) + '</div>' : '<div class="sp-cap empty">no caption</div>') +
+          '<div class="sp-meta"><span class="sp-plat ' + platCls + '">' + platLabel + '</span>' +
+          (dateStr ? '<span class="sp-date">' + dateStr + '</span>' : '') + '</div>' +
+          '<a class="sp-link" href="' + esc(p.url) + '" target="_blank" rel="noopener" title="open post">' + esc(shortUrl) + '</a>' +
+        '</div>';
+      card.querySelector('.sp-selbtn').onclick = (e) => {
+        e.stopPropagation();
+        if (SP.selected[p.url]) delete SP.selected[p.url]; else SP.selected[p.url] = true;
+        card.classList.toggle('sel');
+        spUpdateFoot();
+      };
+      card.querySelector('.sp-link').onclick = (e) => e.stopPropagation();
+      card.onclick = () => spOpenPreview(p, card);
+      grid.appendChild(card);
+    });
+    SP.shown = Math.min(SP.shown + SP.PAGE, posts.length);
+    if (SP.shown < posts.length) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'sp-more'; btn.id = 'sp-more-btn';
+      btn.textContent = 'Load more \u00b7 showing ' + SP.shown + ' of ' + posts.length;
+      btn.onclick = () => spRenderGrid(false);
+      grid.appendChild(btn);
+    }
+  }
+
+  function spUpdateFoot() {
+    const n = Object.keys(SP.selected).length;
+    spEl('sp-count').textContent = n ? n + ' selected' : 'click posts to select';
+    spEl('sp-add-btn').disabled = !n;
+  }
+
+  async function spLoad(refresh) {
+    const grid = spEl('sp-grid');
+    grid.innerHTML = '<div class="sp-loading">loading…</div>';
+    spEl('sp-status').textContent = '';
+    const key = SP.platform;
+    if (!refresh && SP.cache[key]) { spRenderGrid(true); spSetStatus(SP.cache[key]); return; }
+    const pw = sessionStorage.getItem('jinswara_admin_pw') || '';
+    try {
+      const r = await fetch('https://jinswara.lauki.ai/api/social/posts?platform=' + key + (refresh ? '&refresh=1' : ''), {
+        headers: { 'X-Admin-Password': pw }
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error || 'fetch failed');
+      SP.cache[key] = d;
+      spRenderGrid(true);
+      spSetStatus(d);
+    } catch (err) {
+      grid.innerHTML = '<div class="sp-loading">could not load posts — try refresh</div>';
+    }
+  }
+
+  function spSetStatus(d) {
+    let s = (d.posts || []).length + ' posts';
+    if (d.fetchedAt) s += ' · updated ' + new Date(d.fetchedAt).toLocaleString();
+    spEl('sp-status').textContent = s;
+  }
+
+  function spSwitchTab(platform) {
+    SP.platform = platform;
+    document.querySelectorAll('.sp-tab').forEach(t => t.classList.toggle('sel', t.dataset.platform === platform));
+    spLoad(false);
+  }
+
+  function spApplyFilter() {
+    if (!SP.cache[SP.platform]) return;
+    spRenderGrid(true);
+  }
+  spEl('sp-search') && (spEl('sp-search').oninput = spApplyFilter);
+
+  document.getElementById('social-pick-btn').onclick = async () => {
+    if (!(await ensureEventExists())) return;
+    SP.selected = {};
+    spUpdateFoot();
+    spEl('sp-overlay').classList.add('open');
+    spSwitchTab(SP.platform);
+  };
+  spEl('sp-close-btn').onclick = () => spEl('sp-overlay').classList.remove('open');
+  spEl('sp-overlay').addEventListener('click', e => { if (e.target === spEl('sp-overlay')) spEl('sp-overlay').classList.remove('open'); });
+  document.querySelectorAll('.sp-tab').forEach(t => t.onclick = () => spSwitchTab(t.dataset.platform));
+  spEl('sp-refresh-btn').onclick = () => spLoad(true);
+  const SPV = { post: null, card: null };
+  function spOpenPreview(p, card) {
+    SPV.post = p; SPV.card = card;
+    const img = spEl('spv-img');
+    let big = p.thumb || '';
+    if (SP.platform === 'youtube') big = big.replace(/(mq|hq|sd)default/, 'maxresdefault');
+    img.onerror = () => { img.onerror = null; img.src = p.thumb || ''; };
+    img.src = big;
+    spEl('spv-title').textContent = p.title || '';
+    spEl('spv-select-btn').textContent = SP.selected[p.url] ? 'Unselect' : 'Select';
+    spEl('spv-overlay').classList.add('open');
+  }
+  spEl('spv-close-btn').onclick = () => spEl('spv-overlay').classList.remove('open');
+  spEl('spv-overlay').addEventListener('click', e => { if (e.target === spEl('spv-overlay')) spEl('spv-overlay').classList.remove('open'); });
+  spEl('spv-select-btn').onclick = () => {
+    const p = SPV.post; if (!p) return;
+    if (SP.selected[p.url]) delete SP.selected[p.url]; else SP.selected[p.url] = true;
+    if (SPV.card) SPV.card.classList.toggle('sel');
+    spEl('spv-select-btn').textContent = SP.selected[p.url] ? 'Unselect' : 'Select';
+    spUpdateFoot();
+  };
+  spEl('sp-add-btn').onclick = () => {
+    const urls = Object.keys(SP.selected);
+    if (!urls.length) return;
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.mediaLinks) ev.mediaLinks = [];
+    const existing = new Set(ev.mediaLinks.map(l => l.url));
+    urls.forEach(url => { if (!existing.has(url)) ev.mediaLinks.push({ url, platform: detectPlatform(url) }); });
+    spEl('sp-overlay').classList.remove('open');
+    renderMediaLinks();
+  };
+
+  // ── Judges Panel (CRUD, incl. photo) ──
+  let juryPhotoDataUrl = null;
+  let editingJuryIndex = null;
+
+  document.getElementById('jury-photo-dropzone').addEventListener('click', () => document.getElementById('jury-photo-input').click());
+  document.getElementById('jury-photo-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      juryPhotoDataUrl = ev.target.result;
+      document.getElementById('jury-photo-label').textContent = file.name + ' — ready to add';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function uploadJuryPhoto(dataUrl, nameHint) {
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const [meta, b64] = dataUrl.split(',');
+    const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+    try {
+      const resp = await fetch(ADMIN_API + "/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ filename: (nameHint||'judge').replace(/\s+/g,'-').toLowerCase()+'-photo-'+Date.now()+'.jpg', dataBase64: b64, contentType: ct })
+      });
+      const data = await resp.json();
+      return data.ok ? data.url : null;
+    } catch(e) { console.error('judge photo upload failed', e); return null; }
+  }
+
+  function resetJuryAddForm() {
+    document.getElementById('jury-name-input').value = '';
+    document.getElementById('jury-expertise-input').value = '';
+    document.getElementById('jury-bio-textarea').value = '';
+    document.getElementById('jury-photo-label').textContent = 'Click to upload judge photo (optional)';
+    document.getElementById('jury-photo-input').value = '';
+    juryPhotoDataUrl = null;
+  }
+
+  document.getElementById('jury-add-btn').addEventListener('click', async () => {
+    const name = document.getElementById('jury-name-input').value.trim();
+    if (!name) { document.getElementById('jury-name-input').focus(); return; }
+    const expertise = document.getElementById('jury-expertise-input').value.trim();
+    const bio = document.getElementById('jury-bio-textarea').value.trim();
+    if (!(await ensureEventExists())) return;
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.juryPanel) ev.juryPanel = [];
+    let photoUrl = '';
+    if (juryPhotoDataUrl) {
+      const btn = document.getElementById('jury-add-btn');
+      btn.textContent = 'Uploading…'; btn.disabled = true;
+      photoUrl = await uploadJuryPhoto(juryPhotoDataUrl, name) || '';
+      btn.textContent = '+ Add Judge'; btn.disabled = false;
+    }
+    ev.juryPanel.push({ name, expertise, bio, photoUrl });
+    resetJuryAddForm();
+    renderJury();
+    await persistEvents();
+  });
+
+  function renderJury() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const jury = ev ? (ev.juryPanel || []) : [];
+    const list = document.getElementById('jury-list');
+    const empty = document.getElementById('jury-empty');
+    list.querySelectorAll('.jury-row').forEach(r => r.remove());
+    if (!jury.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    jury.forEach((j, i) => {
+      const row = document.createElement('div');
+      row.className = 'jury-row';
+      if (i === editingJuryIndex) {
+        row.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">' +
+            '<input type="text" class="jr-name-input" value="' + esc(j.name) + '" placeholder="Judge name" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="jr-exp-input" value="' + esc(j.expertise||'') + '" placeholder="Expertise / role" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<textarea class="jr-bio-input" placeholder="Short bio" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);min-height:44px;">' + esc(j.bio||'') + '</textarea>' +
+          '</div>' +
+          '<div class="jury-controls" style="align-self:flex-start;">' +
+            '<button type="button" class="ml-btn jr-save">✓</button>' +
+            '<button type="button" class="ml-btn jr-cancel">✕</button>' +
+          '</div>';
+        row.querySelector('.jr-save').onclick = () => {
+          const nm = row.querySelector('.jr-name-input').value.trim();
+          if (nm) {
+            j.name = nm;
+            j.expertise = row.querySelector('.jr-exp-input').value.trim();
+            j.bio = row.querySelector('.jr-bio-input').value.trim();
+          }
+          editingJuryIndex = null; renderJury();
+          persistEvents();
+        };
+        row.querySelector('.jr-cancel').onclick = () => { editingJuryIndex = null; renderJury(); };
+      } else {
+        const initials = (j.name||'?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+        row.innerHTML =
+          '<div class="jury-avatar">' + (j.photoUrl ? '<img src="' + esc(j.photoUrl) + '">' : initials) + '</div>' +
+          '<div class="jury-info">' +
+            '<div class="jn">' + esc(j.name) + '</div>' +
+            (j.expertise ? '<div class="je">' + esc(j.expertise) + '</div>' : '') +
+            (j.bio ? '<div class="jb">' + esc(j.bio) + '</div>' : '') +
+          '</div>' +
+          '<div class="jury-controls">' +
+            '<button type="button" class="ml-btn jr-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn jr-down" ' + (i === jury.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn jr-edit">✎</button>' +
+            '<button type="button" class="ml-btn jr-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.jr-up').onclick = () => { if (i > 0) { [jury[i-1], jury[i]] = [jury[i], jury[i-1]]; renderJury(); persistEvents(); } };
+        row.querySelector('.jr-down').onclick = () => { if (i < jury.length - 1) { [jury[i+1], jury[i]] = [jury[i], jury[i+1]]; renderJury(); persistEvents(); } };
+        row.querySelector('.jr-edit').onclick = () => { editingJuryIndex = i; renderJury(); };
+        row.querySelector('.jr-remove').onclick = () => { if (confirm('Remove ' + j.name + ' from the judges panel?')) { jury.splice(i, 1); renderJury(); persistEvents(); } };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  // ── Winners (CRUD) ──
+  let editingWinnerIndex = null;
+
+  function resetWinnerAddForm() {
+    document.getElementById('winner-position-input').value = '';
+    document.getElementById('winner-name-input').value = '';
+    document.getElementById('winner-city-input').value = '';
+    document.getElementById('winner-agecat-select').value = '';
+    document.getElementById('winner-entrytype-select').value = 'text';
+    document.getElementById('winner-entry-input').value = '';
+    document.getElementById('winner-image-dropzone').style.display = 'none';
+    document.getElementById('winner-image-label').textContent = 'Click to upload winning entry image (optional — or paste a link above)';
+    document.getElementById('winner-image-input').value = '';
+    winnerImageDataUrl = null;
+  }
+
+  let winnerImageDataUrl = null;
+
+  document.getElementById('winner-entrytype-select').addEventListener('change', e => {
+    document.getElementById('winner-image-dropzone').style.display = e.target.value === 'image' ? '' : 'none';
+  });
+  document.getElementById('winner-image-dropzone').addEventListener('click', () => document.getElementById('winner-image-input').click());
+  document.getElementById('winner-image-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      winnerImageDataUrl = ev.target.result;
+      document.getElementById('winner-image-label').textContent = file.name + ' — ready to add';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function uploadWinnerImage(dataUrl, nameHint) {
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const [meta, b64] = dataUrl.split(',');
+    const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+    try {
+      const resp = await fetch(ADMIN_API + "/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ filename: (nameHint||'winner').replace(/\s+/g,'-').toLowerCase()+'-entry-'+Date.now()+'.jpg', dataBase64: b64, contentType: ct })
+      });
+      const data = await resp.json();
+      return data.ok ? data.url : null;
+    } catch(e) { console.error('winner image upload failed', e); return null; }
+  }
+
+  document.getElementById('winner-add-btn').addEventListener('click', async () => {
+    const name = document.getElementById('winner-name-input').value.trim();
+    if (!name) { document.getElementById('winner-name-input').focus(); return; }
+    const position = document.getElementById('winner-position-input').value.trim();
+    const city = document.getElementById('winner-city-input').value.trim();
+    const ageCategory = document.getElementById('winner-agecat-select').value;
+    const entryType = document.getElementById('winner-entrytype-select').value;
+    let entryContent = document.getElementById('winner-entry-input').value.trim();
+    if (!(await ensureEventExists())) return;
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (entryType === 'image' && winnerImageDataUrl) {
+      const btn = document.getElementById('winner-add-btn');
+      btn.textContent = 'Uploading…'; btn.disabled = true;
+      const uploadedUrl = await uploadWinnerImage(winnerImageDataUrl, name);
+      btn.textContent = '+ Add Winner'; btn.disabled = false;
+      if (uploadedUrl) entryContent = uploadedUrl;
+    }
+    if (!ev.results) ev.results = { winners: [], participants: [], gallery: [] };
+    if (!ev.results.winners) ev.results.winners = [];
+    ev.results.winners.push({ position, participantName: name, city, ageCategory, winningEntry: { type: entryType, content: entryContent } });
+    resetWinnerAddForm();
+    renderWinners();
+    await persistEvents();
+  });
+
+  function renderWinners() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const winners = ev && ev.results ? (ev.results.winners || []) : [];
+    const list = document.getElementById('winner-list');
+    const empty = document.getElementById('winner-empty');
+    list.querySelectorAll('.jury-row').forEach(r => r.remove());
+    if (!winners.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    winners.forEach((w, i) => {
+      const row = document.createElement('div');
+      row.className = 'jury-row';
+      if (i === editingWinnerIndex) {
+        row.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">' +
+            '<input type="text" class="wn-pos-input" value="' + esc(w.position||'') + '" placeholder="Position" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="wn-name-input" value="' + esc(w.participantName||'') + '" placeholder="Participant name" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="wn-city-input" value="' + esc(w.city||'') + '" placeholder="City" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<select class="wn-agecat-select" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+              '<option value="">Age Category (optional)</option>' +
+              SETTINGS.ageCategories.map(c => '<option value="' + esc(c) + '"' + (w.ageCategory === c ? ' selected' : '') + '>' + esc(c) + '</option>').join('') +
+            '</select>' +
+            '<input type="text" class="wn-entry-input" value="' + esc((w.winningEntry||{}).content||'') + '" placeholder="Entry content / link" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+          '</div>' +
+          '<div class="jury-controls" style="align-self:flex-start;">' +
+            '<button type="button" class="ml-btn wn-save">✓</button>' +
+            '<button type="button" class="ml-btn wn-cancel">✕</button>' +
+          '</div>';
+        row.querySelector('.wn-save').onclick = () => {
+          const nm = row.querySelector('.wn-name-input').value.trim();
+          if (nm) {
+            w.position = row.querySelector('.wn-pos-input').value.trim();
+            w.participantName = nm;
+            w.city = row.querySelector('.wn-city-input').value.trim();
+            w.ageCategory = row.querySelector('.wn-agecat-select').value;
+            if (!w.winningEntry) w.winningEntry = { type: 'text' };
+            w.winningEntry.content = row.querySelector('.wn-entry-input').value.trim();
+          }
+          editingWinnerIndex = null; renderWinners();
+          persistEvents();
+        };
+        row.querySelector('.wn-cancel').onclick = () => { editingWinnerIndex = null; renderWinners(); };
+      } else {
+        const entry = w.winningEntry || {};
+        row.innerHTML =
+          '<div class="jury-avatar">' + esc(w.position || (i+1)) + '</div>' +
+          '<div class="jury-info">' +
+            '<div class="jn">' + esc(w.participantName) + '</div>' +
+            (w.city || w.ageCategory ? '<div class="je">' + esc([w.city, w.ageCategory].filter(Boolean).join(' · ')) + '</div>' : '') +
+            (entry.content ? '<div class="jb">' + esc(entry.type || 'text') + ': ' + esc(entry.content) + '</div>' : '') +
+          '</div>' +
+          '<div class="jury-controls">' +
+            '<button type="button" class="ml-btn wn-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn wn-down" ' + (i === winners.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn wn-edit">✎</button>' +
+            '<button type="button" class="ml-btn wn-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.wn-up').onclick = () => { if (i > 0) { [winners[i-1], winners[i]] = [winners[i], winners[i-1]]; renderWinners(); persistEvents(); } };
+        row.querySelector('.wn-down').onclick = () => { if (i < winners.length - 1) { [winners[i+1], winners[i]] = [winners[i], winners[i+1]]; renderWinners(); persistEvents(); } };
+        row.querySelector('.wn-edit').onclick = () => { editingWinnerIndex = i; renderWinners(); };
+        row.querySelector('.wn-remove').onclick = () => { if (confirm('Remove ' + w.participantName + ' from winners?')) { winners.splice(i, 1); renderWinners(); persistEvents(); } };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  // ── Featured Entries (CRUD, incl. image) ──
+  let editingFeaturedIndex = null;
+  let featuredImageDataUrl = null;
+
+  document.getElementById('featured-image-dropzone').addEventListener('click', () => document.getElementById('featured-image-input').click());
+  document.getElementById('featured-image-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      featuredImageDataUrl = ev.target.result;
+      document.getElementById('featured-image-label').textContent = file.name + ' — ready to add';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function uploadFeaturedImage(dataUrl, nameHint) {
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const [meta, b64] = dataUrl.split(',');
+    const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+    try {
+      const resp = await fetch(ADMIN_API + "/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ filename: (nameHint||'entry').replace(/\s+/g,'-').toLowerCase()+'-featured-'+Date.now()+'.jpg', dataBase64: b64, contentType: ct })
+      });
+      const data = await resp.json();
+      return data.ok ? data.url : null;
+    } catch(e) { console.error('featured image upload failed', e); return null; }
+  }
+
+  function resetFeaturedAddForm() {
+    document.getElementById('featured-name-input').value = '';
+    document.getElementById('featured-city-input').value = '';
+    document.getElementById('featured-image-url-input').value = '';
+    document.getElementById('featured-image-label').textContent = 'Click to upload the entry image (or paste a link above)';
+    document.getElementById('featured-image-input').value = '';
+    featuredImageDataUrl = null;
+  }
+
+  document.getElementById('featured-add-btn').addEventListener('click', async () => {
+    const name = document.getElementById('featured-name-input').value.trim();
+    const city = document.getElementById('featured-city-input').value.trim();
+    let image = document.getElementById('featured-image-url-input').value.trim();
+    if (!image && !featuredImageDataUrl) { document.getElementById('featured-image-url-input').focus(); alert('Please add an entry image — paste a link or upload a file.'); return; }
+    if (!(await ensureEventExists())) return;
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!image && featuredImageDataUrl) {
+      const btn = document.getElementById('featured-add-btn');
+      btn.textContent = 'Uploading…'; btn.disabled = true;
+      image = await uploadFeaturedImage(featuredImageDataUrl, name) || '';
+      btn.textContent = '+ Add Featured Entry'; btn.disabled = false;
+      if (!image) { alert('Image upload failed. Please try again.'); return; }
+    }
+    if (!ev.featuredEntries) ev.featuredEntries = [];
+    ev.featuredEntries.push({ image, name, city });
+    resetFeaturedAddForm();
+    renderFeatured();
+    await persistEvents();
+  });
+
+  function renderFeatured() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const entries = ev ? (ev.featuredEntries || []) : [];
+    const list = document.getElementById('featured-list');
+    const empty = document.getElementById('featured-empty');
+    list.querySelectorAll('.jury-row').forEach(r => r.remove());
+    if (!entries.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    entries.forEach((f, i) => {
+      const row = document.createElement('div');
+      row.className = 'jury-row';
+      if (i === editingFeaturedIndex) {
+        row.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">' +
+            '<input type="text" class="fe-name-input" value="' + esc(f.name||'') + '" placeholder="Participant name" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="fe-city-input" value="' + esc(f.city||'') + '" placeholder="City" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="fe-image-input" value="' + esc(f.image||'') + '" placeholder="Entry image link" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+          '</div>' +
+          '<div class="jury-controls" style="align-self:flex-start;">' +
+            '<button type="button" class="ml-btn fe-save">✓</button>' +
+            '<button type="button" class="ml-btn fe-cancel">✕</button>' +
+          '</div>';
+        row.querySelector('.fe-save').onclick = () => {
+          f.name = row.querySelector('.fe-name-input').value.trim();
+          f.city = row.querySelector('.fe-city-input').value.trim();
+          const img = row.querySelector('.fe-image-input').value.trim();
+          if (img) f.image = img;
+          editingFeaturedIndex = null; renderFeatured();
+          persistEvents();
+        };
+        row.querySelector('.fe-cancel').onclick = () => { editingFeaturedIndex = null; renderFeatured(); };
+      } else {
+        row.innerHTML =
+          '<div class="jury-avatar">' + (f.image ? '<img src="' + esc(f.image) + '">' : '?') + '</div>' +
+          '<div class="jury-info">' +
+            '<div class="jn">' + esc(f.name || 'Unnamed entry') + '</div>' +
+            (f.city ? '<div class="je">' + esc(f.city) + '</div>' : '') +
+            (f.image ? '<div class="jb"><a href="' + esc(f.image) + '" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">View image</a></div>' : '') +
+          '</div>' +
+          '<div class="jury-controls">' +
+            '<button type="button" class="ml-btn fe-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn fe-down" ' + (i === entries.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn fe-edit">✎</button>' +
+            '<button type="button" class="ml-btn fe-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.fe-up').onclick = () => { if (i > 0) { [entries[i-1], entries[i]] = [entries[i], entries[i-1]]; renderFeatured(); persistEvents(); } };
+        row.querySelector('.fe-down').onclick = () => { if (i < entries.length - 1) { [entries[i+1], entries[i]] = [entries[i], entries[i+1]]; renderFeatured(); persistEvents(); } };
+        row.querySelector('.fe-edit').onclick = () => { editingFeaturedIndex = i; renderFeatured(); };
+        row.querySelector('.fe-remove').onclick = () => { if (confirm('Remove ' + (f.name || 'this entry') + ' from featured entries?')) { entries.splice(i, 1); renderFeatured(); persistEvents(); } };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  function setFormEditable(editable){
+    const ids = ['ev-title-input','ev-type-select','ev-lastdate-input','ev-winners-checkbox','ev-winners-soon-checkbox','ev-formurl-input','ev-desc-textarea','ev-banner-input'];
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = !editable; });
+    document.querySelectorAll('#ev-status-toggle .toggle-opt, .ev-agecat-cb').forEach(el => {
+      if (el.tagName === 'INPUT') el.disabled = !editable;
+      else el.style.pointerEvents = editable ? '' : 'none';
+    });
+    document.getElementById('ev-banner-dropzone').style.pointerEvents = editable ? '' : 'none';
+    ['media-links-field','jury-panel-field','winners-field','featured-field'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.style.pointerEvents = editable ? '' : 'none'; el.style.opacity = editable ? '' : '.45'; }
+    });
+    document.getElementById('btn-save-event').style.display = editable ? '' : 'none';
+    document.getElementById('ev-locked-banner').style.display = editable ? 'none' : 'flex';
+  }
+
+  function resetForm(){
+    currentEventId = null;
+    bannerDataUrl = null;
+    document.getElementById('form-title').textContent = 'Add Event';
+    document.getElementById('ev-title-input').value = '';
+    if (SETTINGS.eventTypes[0]) document.getElementById('ev-type-select').value = SETTINGS.eventTypes[0];
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.toggle('sel', o.dataset.val === 'ongoing'));
+    document.getElementById('ev-lastdate-input').value = '';
+    document.querySelectorAll('.ev-agecat-cb').forEach(cb => cb.checked = false);
+    document.getElementById('ev-winners-checkbox').checked = false;
+    document.getElementById('ev-winners-soon-checkbox').checked = false;
+    document.getElementById('ev-formurl-input').value = '';
+    document.getElementById('ev-desc-textarea').value = '';
+    document.getElementById('ev-banner-label').textContent = 'Drag a banner image here or click to upload';
+    document.getElementById('media-links-editing-tag').textContent = '';
+    document.getElementById('media-link-list').querySelectorAll('.media-link-row').forEach(r => r.remove());
+    document.getElementById('media-link-empty').style.display = '';
+    document.getElementById('jury-editing-tag').textContent = '';
+    resetJuryAddForm();
+    editingJuryIndex = null;
+    document.getElementById('jury-list').querySelectorAll('.jury-row').forEach(r => r.remove());
+    document.getElementById('jury-empty').style.display = '';
+    document.getElementById('winners-editing-tag').textContent = '';
+    resetWinnerAddForm();
+    editingWinnerIndex = null;
+    document.getElementById('winner-list').querySelectorAll('.jury-row').forEach(r => r.remove());
+    document.getElementById('winner-empty').style.display = '';
+    document.getElementById('featured-editing-tag').textContent = '';
+    resetFeaturedAddForm();
+    editingFeaturedIndex = null;
+    document.getElementById('featured-list').querySelectorAll('.jury-row').forEach(r => r.remove());
+    document.getElementById('featured-empty').style.display = '';
+    setFormEditable(true);
+  }
+
+  function editEvent(id){
+    const ev = EVENTS.find(e => e.eventId === id);
+    if (!ev) return;
+    currentEventId = id;
+    bannerDataUrl = null;
+    document.getElementById('form-title').textContent = 'Edit Event';
+    document.getElementById('ev-title-input').value = (ev.title && ev.title.en) || '';
+    document.getElementById('ev-type-select').value = ev.eventType || (SETTINGS.eventTypes[0] || '');
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.toggle('sel', o.dataset.val === ev.status));
+    document.getElementById('ev-lastdate-input').value = ev.lastDateOfSubmission || '';
+    const evCats = ev.ageCategory || [];
+    document.querySelectorAll('.ev-agecat-cb').forEach(cb => cb.checked = evCats.includes(cb.value));
+    document.getElementById('ev-winners-checkbox').checked = !!(ev.results && ev.results.winnersAnnounced);
+    document.getElementById('ev-winners-soon-checkbox').checked = !!(ev.results && ev.results.winnersSoon);
+    document.getElementById('ev-formurl-input').value = ev.form_url || '';
+    document.getElementById('ev-desc-textarea').value = (ev.description && ev.description.en) || '';
+    document.getElementById('ev-banner-label').textContent = ev.bannerImageUrl ? 'banner uploaded — click to replace' : 'Drag a banner image here or click to upload';
+    document.getElementById('media-links-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    renderMediaLinks();
+    document.getElementById('jury-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    resetJuryAddForm();
+    editingJuryIndex = null;
+    renderJury();
+    document.getElementById('winners-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    resetWinnerAddForm();
+    editingWinnerIndex = null;
+    renderWinners();
+    document.getElementById('featured-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    resetFeaturedAddForm();
+    editingFeaturedIndex = null;
+    renderFeatured();
+    setFormEditable(!ev.locked);
+    document.getElementById('btn-delete-event').style.display = '';
+  }
+
+  document.getElementById('btn-unlock-event').addEventListener('click', async () => {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!confirm('Unlock this event for editing? Winners have already been announced — only do this to fix a mistake.')) return;
+    ev.locked = false;
+    renderRows();
+    await persistEvents();
+    setFormEditable(true);
+  });
+
+  async function deleteEvent(id){
+    if (!confirm('Delete this event? This cannot be undone.')) return;
+    EVENTS = EVENTS.filter(e => e.eventId !== id);
+    renderRows();
+    updateStats();
+    if (currentEventId === id) resetForm();
+    await persistEvents();
+  }
+
+  document.getElementById('btn-cancel-event').addEventListener('click', () => { location.href = 'admin-panel'; });
+  document.getElementById('btn-delete-event').addEventListener('click', async () => { if (currentEventId) { await deleteEvent(currentEventId); location.href = 'admin-panel'; } });
+
+  document.getElementById('ev-status-toggle').addEventListener('click', e => {
+    const opt = e.target.closest('.toggle-opt'); if (!opt) return;
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.remove('sel'));
+    opt.classList.add('sel');
+  });
+
+  document.getElementById('ev-banner-dropzone').addEventListener('click', () => document.getElementById('ev-banner-input').click());
+  document.getElementById('ev-banner-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      bannerDataUrl = ev.target.result;
+      document.getElementById('ev-banner-label').textContent = file.name + ' — ready to save';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('btn-save-event').addEventListener('click', async () => {
+    const title = document.getElementById('ev-title-input').value.trim();
+    if (!title) { document.getElementById('ev-title-input').focus(); return; }
+    const status = document.querySelector('#ev-status-toggle .toggle-opt.sel').dataset.val;
+    const eventType = document.getElementById('ev-type-select').value;
+    const lastDate = document.getElementById('ev-lastdate-input').value;
+    const ageCategory = Array.from(document.querySelectorAll('.ev-agecat-cb:checked')).map(cb => cb.value);
+    const winnersAnnounced = document.getElementById('ev-winners-checkbox').checked;
+    const winnersSoon = document.getElementById('ev-winners-soon-checkbox').checked;
+    const locked = status === 'past' && winnersAnnounced; // accident-prevention auto-lock; admin can Unlock
+    const formUrl = document.getElementById('ev-formurl-input').value.trim();
+    const desc = document.getElementById('ev-desc-textarea').value.trim();
+
+    let bannerUrl = null;
+    if (bannerDataUrl) {
+      const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+      const [meta, b64] = bannerDataUrl.split(',');
+      const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+      try {
+        const resp = await fetch(ADMIN_API + "/upload-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+          body: JSON.stringify({ filename: title.replace(/\s+/g,'-').toLowerCase()+'-banner.jpg', dataBase64: b64, contentType: ct })
+        });
+        const data = await resp.json();
+        if (data.ok) bannerUrl = data.url;
+      } catch(e) { console.error('banner upload failed', e); }
+    }
+
+    if (currentEventId) {
+      const ev = EVENTS.find(e => e.eventId === currentEventId);
+      Object.assign(ev, {
+        title: { ...(ev.title||{}), en: title },
+        status, eventType, ageCategory,
+        lastDateOfSubmission: lastDate,
+        form_url: formUrl,
+        description: { ...(ev.description||{}), en: desc },
+        bannerImageUrl: bannerUrl || ev.bannerImageUrl || '',
+        results: { ...(ev.results||{}), winnersAnnounced, winnersSoon },
+        locked
+      });
+    } else {
+      const newId = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + (EVENTS.length+1);
+      EVENTS.unshift({
+        eventId: newId,
+        title: { en: title }, status, year: new Date().getFullYear(), month: '',
+        eventType, ageCategory, lastDateOfSubmission: lastDate,
+        description: { en: desc }, rules: [], juryPanel: [],
+        results: { winners: [], participants: [], gallery: [], winnersAnnounced, winnersSoon },
+        bannerImageUrl: bannerUrl || '', form_url: formUrl, mediaLinks: [], locked
+      });
+      currentEventId = newId;
+    }
+    renderRows();
+    updateStats();
+    await persistEvents();
+    location.href = 'admin-panel';
+  });
+
+  (async () => {
+    await loadSettings();
+    await loadEvents();
+    const params = new URLSearchParams(location.search);
+    const editId = params.get('id');
+    if (editId) {
+      editEvent(editId);
+    } else {
+      resetForm();
+    }
+  })();
+</script>
+</body>
+</html>

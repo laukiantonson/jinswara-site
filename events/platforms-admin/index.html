@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JinSwara Admin — Platforms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+
+  .shell { display:flex; min-height:100vh; }
+
+  /* SIDEBAR — same as events admin */
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+
+  .content { padding:28px 32px 60px; max-width:1200px; }
+
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  .stat { background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 20px; }
+  .stat .n { font-size:26px; font-weight:800; font-family:'DM Sans'; }
+  .stat .l { font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .stat.c-coral .n { color:var(--coral); } .stat.c-teal .n { color:var(--teal); } .stat.c-gold .n { color:var(--gold); }
+
+  .panels { display:grid; grid-template-columns:1.15fr .85fr; gap:20px; align-items:start; }
+  .panel { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--card-border); }
+  .panel-head h3 { font-size:15px; font-weight:700; }
+  .btn-add { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--indigo),var(--violet));
+    border:none; color:#fff; font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; }
+
+  /* VOLUNTEER LIST */
+  .vol-list { max-height:640px; overflow-y:auto; }
+  .vol-row { display:flex; align-items:center; gap:12px; padding:12px 22px; border-bottom:1px solid rgba(255,255,255,.05); }
+  .vol-row:hover { background:rgba(255,255,255,.02); }
+  .vol-row.dragging { opacity:.35; }
+  .vol-row.drag-over-top { box-shadow: inset 0 2px 0 var(--teal); }
+  .vol-row.drag-over-bottom { box-shadow: inset 0 -2px 0 var(--teal); }
+  .vol-drag-handle { flex:none; width:16px; height:16px; cursor:grab; color:var(--ink-faint); display:grid; place-items:center; }
+  .vol-drag-handle svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .vol-search-row { display:flex; align-items:center; gap:10px; }
+  .vol-reorder-hint { font-size:11.5px; color:var(--ink-faint); padding:0 22px 10px; }
+  .vol-thumb { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--teal),var(--indigo)); flex:none;
+    display:grid; place-items:center; font-size:12px; font-weight:700; color:#fff; overflow:hidden; }
+  .vol-thumb img { width:100%; height:100%; object-fit:cover; }
+  .vol-info { flex:1; min-width:0; }
+  .vol-info .t { font-size:13.5px; font-weight:600; }
+  .vol-info .m { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:100px; flex:none; }
+  .badge.active { background:rgba(45,212,191,.15); color:var(--teal); }
+  .badge.other { background:rgba(196,181,253,.12); color:var(--lavender); }
+  .vol-actions { display:flex; gap:6px; }
+  .icon-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--ink-dim);
+    display:grid; place-items:center; cursor:pointer; }
+  .icon-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .icon-btn.danger:hover { color:var(--coral); border-color:rgba(255,107,107,.3); }
+  .vol-search { padding:14px 22px; border-bottom:1px solid var(--card-border); }
+  .vol-search input { width:100%; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px;
+    padding:9px 12px; color:var(--ink); font-size:13px; }
+
+  /* ADD FORM */
+  .form-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+  .field label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-dim); margin-bottom:6px; }
+  .field input, .field select { width:100%; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px;
+    padding:10px 12px; color:var(--ink); font-size:13.5px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .toggle-group { display:flex; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px; overflow:hidden; }
+  .toggle-opt { flex:1; text-align:center; padding:8px 6px; font-size:12.5px; font-weight:600; color:var(--ink-faint); cursor:pointer; }
+  .toggle-opt.sel { background:linear-gradient(135deg,var(--indigo),var(--violet)); color:#fff; }
+  .dropzone { border:1.5px dashed var(--card-border); border-radius:12px; padding:22px 10px; text-align:center;
+    color:var(--ink-faint); font-size:12.5px; cursor:pointer; }
+  .dropzone svg { width:22px; height:22px; stroke:var(--ink-faint); fill:none; stroke-width:1.6; margin-bottom:6px; }
+  .dropzone.has-preview { padding:8px; }
+  .dropzone img.preview { width:100%; max-height:140px; object-fit:cover; border-radius:8px; }
+  .form-actions { display:flex; gap:10px; margin-top:4px; }
+  .btn-save { flex:1; background:linear-gradient(135deg,var(--teal),var(--indigo)); border:none; color:#fff; font-weight:700;
+    font-size:13.5px; padding:11px; border-radius:10px; cursor:pointer; }
+  .btn-cancel { background:transparent; border:1px solid var(--card-border); color:var(--ink-dim); font-weight:600;
+    font-size:13.5px; padding:11px 18px; border-radius:10px; cursor:pointer; }
+
+  /* MOBILE — sidebar collapses to a horizontal scrollable tab bar so nav links
+     (incl. Events) never overflow off-screen or require horizontal scrolling */
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+.icon-btn{width:40px;height:40px;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/events/admin-panel"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a class="active" href="/events/platforms-admin"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Platforms</a>
+      <a href="/events/bookclub-admin"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Book Club</a>
+      <a href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Platforms</h1><p>Add a new JinSwara platform — homepage card, about page, navbar &amp; footer links are all automatic</p></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat c-violet"><div class="n" id="stat-total">0</div><div class="l">Platforms added here</div></div>
+        <div class="stat c-teal"><div class="n">4</div><div class="l">Built-in (Forum, Jinwani, Wordle, Niyam)</div></div>
+      </div>
+
+      <div class="panels">
+        <div class="panel">
+          <div class="panel-head"><h3>Added Platforms</h3><button class="btn-add" id="btn-new-pf">+ Add Platform</button></div>
+          <div class="vol-list" id="pf-list"></div>
+          <div id="pf-empty" style="padding:22px 18px;color:var(--ink-faint);font-size:13px;">
+            No platforms have been added yet — click <b>+ Add Platform</b> to create your first one.<br><br>
+            Once you save, everything updates automatically: a card on the homepage, a dedicated about page, and links in the navbar and footer.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3 id="form-title">Add Platform</h3></div>
+          <div class="form-body">
+            <div class="field"><label>Platform Name *</label><input type="text" id="pf-name" placeholder="e.g. Book Club"></div>
+            <div class="row2">
+              <div class="field"><label>Domain (shown on card)</label><input type="text" id="pf-domain" placeholder="e.g. bookclub.jinswara.com"></div>
+              <div class="field"><label>Link (Visit button URL)</label><input type="text" id="pf-url" placeholder="https://bookclub.jinswara.com"></div>
+            </div>
+            <div class="row2">
+              <div class="field"><label>Card Color</label>
+                <select id="pf-color" style="width:100%;background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:10px;padding:10px 12px;color:var(--ink);font-size:13.5px;">
+                  <option value="">auto</option>
+                  <option value="violet">violet</option>
+                  <option value="teal">teal</option>
+                  <option value="coral">coral</option>
+                  <option value="gold">gold</option>
+                  <option value="pink">pink</option>
+                </select>
+              </div>
+              <div class="field"><label>Button Text</label><input type="text" id="pf-cta" placeholder="e.g. Visit Book Club (default: Know More)"></div>
+            </div>
+            <div class="field"><label>Short Description * (homepage card, 1-2 lines)</label><textarea id="pf-card" rows="3" placeholder="One or two lines that appear on the homepage card"></textarea></div>
+            <div class="field"><label>Hero Badge (about page, optional)</label><input type="text" id="pf-badge" placeholder="e.g. COMMUNITY · MONTHLY BOOK · FREE"></div>
+            <div class="field"><label>About (about page)</label><textarea id="pf-about" rows="6" placeholder="Longer description for the platform's own page. Leave empty to reuse the short description."></textarea><div style="font-size:11.5px;color:var(--ink-faint,#8a8a93);margin-top:5px;">Markdown supported &mdash; **bold**, *italic*, # heading, - list, [link](url)</div></div>
+            <div class="field"><label>Key Features (optional — one per line: Title | description)</label><textarea id="pf-features" rows="4" placeholder="Monthly Book | One hand-picked Jain book every month&#10;WhatsApp Circle | Discuss with fellow readers"></textarea></div>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:14px;">
+              <button class="btn-add" id="btn-save-pf" style="padding:11px 22px;">Save Platform</button>
+              <button class="btn-add" id="btn-cancel-pf" style="display:none;background:transparent;border:1px solid var(--card-border);color:var(--ink-faint);">Cancel Edit</button>
+              <span id="save-status" style="font-size:12.5px;color:var(--ink-faint);"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="confirm-overlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(4,6,16,.72);align-items:center;justify-content:center;">
+  <div style="background:var(--bg-2,#0b0f24);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px 26px;max-width:340px;width:90%;text-align:center;">
+    <div id="confirm-text" style="color:#eef1ff;font-size:14.5px;font-weight:600;margin-bottom:18px;"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button id="confirm-yes" style="background:linear-gradient(135deg,#f43f5e,#fb7185);border:none;border-radius:9px;padding:9px 20px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;">Delete</button>
+      <button id="confirm-no" style="background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:9px 20px;color:#9aa3c7;font-weight:700;font-size:13px;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+const DATA_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/projects.json";
+let platforms = [];
+let editIdx = -1;
+
+/* ---------- auth gate (same flow as volunteers-admin) ---------- */
+async function verifyPw(pw) {
+  try {
+    const resp = await fetch(ADMIN_API + "/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: pw }) });
+    const j = await resp.json().catch(() => ({}));
+    return !!j.ok;
+  } catch (e) { return false; }
+}
+async function tryLogin() {
+  const pw = document.getElementById("admin-auth-pw").value;
+  const err = document.getElementById("admin-auth-err");
+  err.textContent = "Checking\u2026";
+  if (await verifyPw(pw)) {
+    sessionStorage.setItem("jinswara_admin_pw", pw);
+    document.getElementById("admin-auth-gate").style.display = "none";
+    boot();
+  } else { err.textContent = "Incorrect password"; }
+}
+document.getElementById("admin-auth-btn").onclick = tryLogin;
+document.getElementById("admin-auth-pw").addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
+(async () => {
+  const saved = sessionStorage.getItem("jinswara_admin_pw");
+  if (saved && await verifyPw(saved)) {
+    document.getElementById("admin-auth-gate").style.display = "none";
+    boot();
+  }
+})();
+
+/* ---------- data ---------- */
+async function loadPlatforms() {
+  try {
+    const resp = await fetch(DATA_URL + "?t=" + Date.now());
+    platforms = resp.ok ? await resp.json() : [];
+    if (!Array.isArray(platforms)) platforms = [];
+  } catch (e) { platforms = []; }
+}
+async function persist() {
+  const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+  const el = document.getElementById("save-status");
+  el.textContent = "Saving\u2026";
+  try {
+    const resp = await fetch(ADMIN_API + "/save-projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+      body: JSON.stringify({ projects: platforms })
+    });
+    const j = await resp.json().catch(() => ({}));
+    const ok = !!j.ok;
+    el.textContent = ok ? "\u2713 Saved — the site will update in about a minute" : "\u2715 Save failed";
+    el.style.color = ok ? "#34d399" : "#ff6b6b";
+    setTimeout(() => { el.textContent = ""; el.style.color = ""; }, 5000);
+    return ok;
+  } catch (e) {
+    el.textContent = "\u2715 Save failed"; el.style.color = "#ff6b6b";
+    return false;
+  }
+}
+
+/* ---------- helpers ---------- */
+function slugify(name) {
+  const s = name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return s || ("platform-" + Date.now());
+}
+function uniqueId(base) {
+  let id = base, n = 2;
+  while (platforms.some((p, i) => i !== editIdx && p.id === id)) { id = base + "-" + n; n++; }
+  return id;
+}
+function parseFeatures(txt) {
+  return txt.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+    const parts = l.split("|");
+    return { title: (parts[0] || "").trim(), desc: (parts.slice(1).join("|") || "").trim() };
+  }).filter(f => f.title);
+}
+function featuresToText(feats) {
+  return (feats || []).map(f => f.title + (f.desc ? " | " + f.desc : "")).join("\n");
+}
+
+/* ---------- ui ---------- */
+function renderList() {
+  const list = document.getElementById("pf-list");
+  const empty = document.getElementById("pf-empty");
+  list.innerHTML = "";
+  empty.style.display = platforms.length ? "none" : "";
+  document.getElementById("stat-total").textContent = platforms.length;
+  platforms.forEach((p, i) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--card-border);";
+    const dot = document.createElement("div");
+    const colors = { violet: "#8b5cf6", teal: "#2dd4bf", coral: "#fb7185", gold: "#fbbf24", pink: "#f472b6" };
+    dot.style.cssText = "width:10px;height:10px;border-radius:50%;flex:none;background:" + (colors[p.color] || "#8b5cf6") + ";";
+    const info = document.createElement("div");
+    info.style.cssText = "flex:1;min-width:0;";
+    info.innerHTML = '<div style="font-weight:700;font-size:13.5px;color:var(--ink);"></div><div style="font-size:11.5px;color:var(--ink-faint);"></div>';
+    info.children[0].textContent = p.name;
+    info.children[1].textContent = (p.domain || "") + "  \u00b7  /platform/?id=" + p.id;
+    const btnE = document.createElement("button");
+    btnE.textContent = "Edit";
+    btnE.style.cssText = "background:transparent;border:1px solid var(--card-border);border-radius:8px;padding:5px 12px;color:var(--lavender,#a78bfa);font-size:12px;font-weight:700;cursor:pointer;";
+    btnE.onclick = () => startEdit(i);
+    const btnD = document.createElement("button");
+    btnD.textContent = "Delete";
+    btnD.style.cssText = "background:transparent;border:1px solid var(--card-border);border-radius:8px;padding:5px 12px;color:#fb7185;font-size:12px;font-weight:700;cursor:pointer;";
+    btnD.onclick = () => confirmDelete(i);
+    row.append(dot, info, btnE, btnD);
+    list.appendChild(row);
+  });
+}
+function resetForm() {
+  editIdx = -1;
+  ["pf-name", "pf-domain", "pf-url", "pf-cta", "pf-card", "pf-badge", "pf-about", "pf-features"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("pf-color").value = "";
+  document.getElementById("form-title").textContent = "Add Platform";
+  document.getElementById("btn-cancel-pf").style.display = "none";
+}
+function startEdit(i) {
+  editIdx = i;
+  const p = platforms[i];
+  document.getElementById("pf-name").value = p.name || "";
+  document.getElementById("pf-domain").value = p.domain || "";
+  document.getElementById("pf-url").value = p.url || "";
+  document.getElementById("pf-color").value = p.color || "";
+  document.getElementById("pf-cta").value = p.ctaText || "";
+  document.getElementById("pf-card").value = p.card || "";
+  document.getElementById("pf-badge").value = p.badge || "";
+  document.getElementById("pf-about").value = p.about || "";
+  document.getElementById("pf-features").value = featuresToText(p.features);
+  document.getElementById("form-title").textContent = "Edit: " + (p.name || "");
+  document.getElementById("btn-cancel-pf").style.display = "";
+  document.getElementById("pf-name").focus();
+}
+function confirmDelete(i) {
+  const overlay = document.getElementById("confirm-overlay");
+  document.getElementById("confirm-text").textContent = 'Delete platform "' + platforms[i].name + '"? Its card, page and links will disappear from the site.';
+  overlay.style.display = "flex";
+  const yes = document.getElementById("confirm-yes"), no = document.getElementById("confirm-no");
+  const close = () => { overlay.style.display = "none"; yes.onclick = null; no.onclick = null; };
+  yes.onclick = async () => {
+    close();
+    platforms.splice(i, 1);
+    renderList();
+    if (editIdx === i) resetForm();
+    await persist();
+  };
+  no.onclick = close;
+}
+async function savePlatform() {
+  const name = document.getElementById("pf-name").value.trim();
+  const card = document.getElementById("pf-card").value.trim();
+  const el = document.getElementById("save-status");
+  if (!name) { el.textContent = "Platform name is required"; el.style.color = "#ff6b6b"; return; }
+  if (!card) { el.textContent = "A short description is required"; el.style.color = "#ff6b6b"; return; }
+  let url = document.getElementById("pf-url").value.trim();
+  const domain = document.getElementById("pf-domain").value.trim();
+  if (!url && domain) url = "https://" + domain.replace(/^https?:\/\//, "");
+  if (url && !/^https?:\/\//.test(url)) url = "https://" + url;
+  const p = {
+    id: editIdx >= 0 ? platforms[editIdx].id : uniqueId(slugify(name)),
+    name, domain, url,
+    color: document.getElementById("pf-color").value,
+    ctaText: document.getElementById("pf-cta").value.trim(),
+    card,
+    badge: document.getElementById("pf-badge").value.trim(),
+    about: document.getElementById("pf-about").value.trim(),
+    features: parseFeatures(document.getElementById("pf-features").value)
+  };
+  if (editIdx >= 0) platforms[editIdx] = p; else platforms.push(p);
+  renderList();
+  const ok = await persist();
+  if (ok) resetForm();
+}
+
+document.getElementById("btn-save-pf").onclick = savePlatform;
+document.getElementById("btn-cancel-pf").onclick = resetForm;
+document.getElementById("btn-new-pf").onclick = () => { resetForm(); document.getElementById("pf-name").focus(); };
+
+async function boot() {
+  await loadPlatforms();
+  renderList();
+}
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — JinSwara</title>
+<title>About JinSwara — Jain Tech Community Since 2017</title>
 <meta name="description" content="Learn how JinSwara started in 2017 as a small attempt to combine technology with Jainism — our mission, promises, and community videos.">
 <link rel="canonical" href="https://jinswara.lauki.ai/about">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -18,13 +18,13 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="About — JinSwara">
+<meta property="og:title" content="About JinSwara — Jain Tech Community Since 2017">
 <meta property="og:description" content="Learn how JinSwara started in 2017 as a small attempt to combine technology with Jainism — our mission, promises, and community videos.">
 <meta property="og:url" content="https://jinswara.lauki.ai/about">
 <meta property="og:image" content="https://jinswara.lauki.ai/og-image.png">
 <meta property="og:site_name" content="JinSwara">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="About — JinSwara">
+<meta name="twitter:title" content="About JinSwara — Jain Tech Community Since 2017">
 <meta name="twitter:description" content="Learn how JinSwara started in 2017 as a small attempt to combine technology with Jainism — our mission, promises, and community videos.">
 <meta name="twitter:image" content="https://jinswara.lauki.ai/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -558,7 +558,62 @@
   }
   .foot-social a:hover { transform: translateY(-3px); color: var(--lavender); border-color: rgba(196,181,253,.5); background: rgba(255,255,255,.08); }
   .foot-social svg { width: 17px; height: 17px; fill: currentColor; }
-  </style>
+  
+/* ===== Origin-story timeline strip ===== */
+.js-timeline{margin-top:56px}
+.jt-head{margin-bottom:26px}
+.jt-kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;background:linear-gradient(90deg,var(--gold),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+.jt-sub{color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:640px}
+.jt-track{display:flex;gap:22px;align-items:stretch;overflow-x:auto;padding:10px 4px 22px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.jt-track::-webkit-scrollbar{height:7px}
+.jt-track::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:10px}
+.jt-card{position:relative;flex:0 0 auto;scroll-snap-align:start;border-radius:var(--radius);padding:22px 22px 24px;border:1px solid var(--card-border);background:var(--card);backdrop-filter:blur(14px)}
+.jt-year{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;padding:4px 11px;border-radius:999px;background:linear-gradient(90deg,var(--a1,var(--indigo)),var(--a2,var(--teal)));color:#fff;margin-bottom:12px}
+.jt-card h4{font-family:'DM Sans',sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0 0 8px}
+.jt-card p{color:var(--ink-dim);font-size:14.5px;line-height:1.62;margin:0}
+.jt-dot{position:absolute;left:24px;bottom:-11px;width:12px;height:12px;border-radius:50%;background:var(--a1,var(--indigo));box-shadow:0 0 0 4px var(--bg)}
+/* forward milestone accents */
+.jt-forum{--a1:#2dd4bf;--a2:#5eead4;width:265px}
+.jt-events{--a1:#818cf8;--a2:#c4b5fd;width:210px}
+.jt-apps{--a1:#f472b6;--a2:#fbbf24;width:255px}
+/* genesis (vintage) card */
+.jt-genesis{width:300px;background:linear-gradient(160deg,#f7efe0 0%,#efe3cd 100%);border:1px solid #d8c39c;box-shadow:0 10px 30px rgba(120,90,30,.16)}
+[data-theme="light"] .jt-genesis{box-shadow:0 10px 26px rgba(120,90,30,.14)}
+.jt-genesis .jt-year{background:#0091C6;color:#fff}
+.jt-genesis h4{color:#5a4a2b}
+.jt-genesis p{color:#7a6742}
+.jt-genesis .jt-dot{background:#0091C6;box-shadow:0 0 0 4px var(--bg)}
+.jt-frame{margin:4px 0 14px;padding:8px 8px 10px;background:#fffdf7;border:1px solid #e2d3b0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.03),0 2px 8px rgba(120,90,30,.12);transform:rotate(-.7deg)}
+.jt-frame img{display:block;width:100%;height:auto;border-radius:4px;filter:sepia(.16) contrast(.98) saturate(.94)}
+.jt-frame .jt-cap{margin-top:8px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.04em;color:#9a855c;font-style:italic}
+.jt-badge2017{position:absolute;top:-12px;right:16px;font-size:11px;font-weight:800;letter-spacing:.14em;color:#0091C6;background:#fffdf7;border:1px solid #d8c39c;border-radius:999px;padding:4px 12px;transform:rotate(3deg);box-shadow:0 3px 8px rgba(120,90,30,.16)}
+.jt-note{margin-top:14px;font-size:12.5px;color:var(--ink-faint);display:flex;align-items:center;gap:7px}
+/* forum card screenshot frame (modern, matches site card system) */
+.jt-shot{margin:2px 0 14px;padding:6px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+[data-theme="light"] .jt-shot{background:rgba(0,0,0,.02);box-shadow:0 6px 16px rgba(20,24,52,.10)}
+.jt-shot img{display:block;width:100%;height:auto;border-radius:6px}
+.jt-shot .jt-cap{margin-top:7px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--ink-faint)}
+/* app family grid */
+.jt-apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 4px}
+.jt-app{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px;border-radius:12px;border:1px solid var(--card-border);background:rgba(255,255,255,.03);text-align:center}
+[data-theme="light"] .jt-app{background:rgba(20,24,52,.02)}
+.jt-app .jt-ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:9px;color:#fff}
+.jt-app .jt-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.jt-app span{font-size:12px;font-weight:600;color:var(--ink-dim);letter-spacing:.01em}
+.jt-ic.i-forum{background:linear-gradient(135deg,#2dd4bf,#5eead4)}
+.jt-ic.i-jinwani{background:linear-gradient(135deg,#38bdf8,#7dd3fc)}
+.jt-ic.i-niyam{background:linear-gradient(135deg,#fbbf24,#fcd34d)}
+.jt-ic.i-wordle{background:linear-gradient(135deg,#a78bfa,#c4b5fd)}
+.jt-ic.i-jinquest{background:linear-gradient(135deg,#f472b6,#fb7185)}
+.jt-ic.i-book{background:linear-gradient(135deg,#34d399,#6ee7b7)}
+@media(max-width:760px){
+  .jt-track{flex-direction:column;overflow-x:visible;padding-left:22px;position:relative}
+  .jt-track::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#0091C6,var(--teal),var(--indigo),var(--pink))}
+  .jt-card{width:auto!important}
+  .jt-dot{left:-19px;top:26px;bottom:auto}
+}
+
+</style>
 </head>
 <body>
 
@@ -576,14 +631,15 @@
         <a href="/jinwani">Jinwani</a>
         <a href="/wordle">Wordle</a>
         <a href="/niyam">Niyam</a>
-        <a href="https://events.jinswara.com" target="_blank">Events</a>
       </div>
     </div>
+    <a href="/events/">Events</a>
+    <a href="/book-club">Book Club</a>
     <a href="/about" class="active">About</a>
     <a href="/#story">Story</a>
     <a href="/#team">Team</a>
     <a href="/volunteers">Volunteers</a>
-    <a href="/" class="nav-cta">Know More</a>
+    <a href="/about" class="nav-cta" style="display:none !important;" aria-hidden="true">Know More</a>
   </div>
   <button class="theme-toggle" aria-label="Toggle light/dark theme" onclick="toggleTheme()">
     <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -608,6 +664,73 @@
   <p class="tagline">Digitalizing Jainism — combining the <strong>art of living</strong> in the light of Jainism with the technological aspects of today's world.</p>
 </header>
 
+
+<!-- NAME MEANING -->
+<style>
+  #name-meaning { padding: 64px 22px 8px; }
+  .nm-card {
+    max-width: 760px; margin: 0 auto; text-align: center;
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 46px 34px 42px; position: relative; overflow: hidden;
+  }
+  .nm-card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% -10%, rgba(139,92,246,.16), transparent 60%);
+  }
+  .nm-card > * { position: relative; z-index: 1; }
+  .nm-split {
+    display: inline-flex; align-items: flex-end; justify-content: center;
+    gap: 18px; margin: 6px 0 26px; flex-wrap: wrap;
+  }
+  .nm-part { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+  .nm-part b {
+    font-size: clamp(30px, 4.4vw, 44px); font-weight: 800; letter-spacing: -.02em;
+    background: linear-gradient(90deg, #818cf8, #c4b5fd, #2dd4bf, #818cf8);
+    background-size: 250% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .nm-part em { font-style: normal; color: var(--lavender); font-size: 17px; font-weight: 500; margin-top: 8px; opacity: .85; }
+  .nm-plus { font-size: 30px; font-weight: 300; color: var(--ink-faint); align-self: center; margin-bottom: 22px; }
+  .nm-deva {
+    font-size: clamp(19px, 2.6vw, 26px); font-weight: 600; color: var(--ink);
+    line-height: 1.5; margin: 0 auto 16px; max-width: 560px;
+  }
+  .nm-en { font-size: 15.5px; color: var(--ink-dim); line-height: 1.6; margin: 0 auto 20px; max-width: 500px; }
+  .nm-en span { color: var(--teal); font-style: italic; }
+  .nm-note {
+    display: inline-block; font-size: 13.5px; color: var(--ink-dim);
+    padding: 9px 18px; border: 1px solid var(--card-border); border-radius: 999px;
+    background: rgba(255,255,255,.02);
+  }
+  .nm-note strong { color: var(--lavender); font-weight: 600; }
+  .nm-deep { margin-top: 22px; }
+  .nm-deep .nm-deva { font-size: clamp(17px, 2.2vw, 22px); margin-bottom: 14px; }
+  .nm-deep .nm-en { max-width: 620px; }
+  .nm-deep .nm-en strong { color: var(--lavender); font-weight: 600; }
+  @media (max-width: 480px){ .nm-card { padding: 38px 22px 34px; } .nm-plus { margin-bottom: 20px; } }
+</style>
+<section id="name-meaning">
+  <div class="wrap">
+    <div class="nm-card reveal">
+      <span class="kicker">The Name</span>
+      <div class="nm-split">
+        <span class="nm-part"><b>Jin</b><em>जिन</em></span>
+        <span class="nm-plus">+</span>
+        <span class="nm-part"><b>Swara</b><em>स्वर</em></span>
+      </div>
+      <p class="nm-deva">जहाँ जिनेन्द्र भगवान के स्वर गूंजते हैं</p>
+      <p class="nm-en">“JinSwara” — where the voice (<span>swara</span>) of the Jinendra resonates.</p>
+      <p class="nm-note">Another name for <strong>Jinvani</strong> — जिनवाणी का दूसरा नाम</p>
+    </div>
+    <div class="nm-card nm-deep reveal">
+      <span class="kicker">The Deeper Meaning</span>
+      <p class="nm-deva">जिनस्वर — the divine sound of the Jina, the resonance of Jinvani</p>
+      <p class="nm-en">From the root √जि (<em>ji</em>, “to conquer”) comes “Jina” — one who has conquered attachment, aversion and the passions. From the root √स्वृ (<em>svṛ</em>, “to resonate”) comes “Svara” — sound, note, melody. Their union runs deeper than the words: after attaining kevalgyaan (omniscience), a divine sound — <strong>दिव्यध्वनि</strong> (divyadhvani) — emanates from the Tirthankara, and from that sacred resonance all teaching flows forth as <strong>जिनवाणी</strong> (Jinvani), the voice of the Jina. “JinSwara” is the name of that resonant voice — an effort to let the Jina’s teachings echo in our age.</p>
+    </div>
+  </div>
+</section>
+
+
 <!-- ORIGIN & MOTIVE -->
 <section id="origin">
   <div class="wrap">
@@ -625,6 +748,64 @@
         <p>A small attempt to combine technology with Jainism — an opportunity to utilize smart devices for learning Jainism with almost no effort.</p>
       </div>
     </div>
+  
+
+    <div class="js-timeline reveal d3">
+      <div class="jt-head">
+        <span class="jt-kicker">From 2017 to today</span>
+        <p class="jt-sub">Every platform you see today grew from a single, simple page. This is the path it took.</p>
+      </div>
+      <div class="jt-track">
+
+        <div class="jt-card jt-genesis reveal d1">
+          <span class="jt-badge2017">EST. 2017</span>
+          <span class="jt-year">Where it all began</span>
+          <div class="jt-frame">
+            <img src="/assets/genesis-2017.jpg" alt="The original 2017 JinSwara bhajan-discovery website" loading="lazy" width="1000" height="825">
+            <div class="jt-cap">JinSwara &middot; 2017</div>
+          </div>
+          <h4>The very first JinSwara</h4>
+          <p>A simple bhajan-discovery page &mdash; search bhajans and browse by Dev, Shastra, Guru and Adhyatm Bhakti. The same structure the forum still follows today.</p>
+          <div class="jt-dot"></div>
+        </div>
+
+        <div class="jt-card jt-forum reveal d2">
+          <span class="jt-year">The Forum</span>
+          <div class="jt-shot">
+            <img src="/assets/forum-2025.jpg" alt="The JinSwara community forum homepage" loading="lazy" width="1000" height="625">
+            <div class="jt-cap">forum.jinswara.com</div>
+          </div>
+          <h4>A place to discuss Jainism</h4>
+          <p>The idea grew into a full community forum &mdash; a dedicated space to explore and discuss the nuances of Jainism, together.</p>
+          <div class="jt-dot"></div>
+        </div>
+
+        <div class="jt-card jt-events reveal d3">
+          <span class="jt-year">Events</span>
+          <h4>The community creates</h4>
+          <p>Poetry, recitation, quizzes and art &mdash; competitions that bring the community together to create, share and learn.</p>
+          <div class="jt-dot"></div>
+        </div>
+
+        <div class="jt-card jt-apps reveal d4">
+          <span class="jt-year">Today</span>
+          <h4>A family of platforms</h4>
+          <div class="jt-apps-grid">
+            <div class="jt-app"><span class="jt-ic i-forum"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span><span>Forum</span></div>
+            <div class="jt-app"><span class="jt-ic i-jinwani"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><span>Jinwani</span></div>
+            <div class="jt-app"><span class="jt-ic i-niyam"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><span>Niyam</span></div>
+            <div class="jt-app"><span class="jt-ic i-wordle"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span>Wordle</span></div>
+            <div class="jt-app"><span class="jt-ic i-jinquest"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><span>JinQuest</span></div>
+            <div class="jt-app"><span class="jt-ic i-book"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h6"/></svg></span><span>Book Club</span></div>
+          </div>
+          <p>A growing family of platforms &mdash; and it keeps expanding.</p>
+          <div class="jt-dot"></div>
+        </div>
+
+      </div>
+      <div class="jt-note">&#128274; The 2017 website and forum are shown as snapshots only &mdash; kept as a memory, not re-published.</div>
+    </div>
+
   </div>
 </section>
 
@@ -667,6 +848,11 @@
         <h3>Good intent, weak execution</h3>
         <p>Previous attempts by others to digitalize Jainism often lacked technical execution, enthusiasm, or well-curated content.</p>
       </div>
+      <div class="info-card a2 reveal d3">
+        <span class="info-label">Closed Doors</span>
+        <h3>Open to all, not just scholars</h3>
+        <p>Existing platforms mostly give opportunities to scholars or those trained within their own circles. JinSwara is open to all — anyone with a genuine interest in Jain Dharma deserves an equal opportunity, wherever they come from.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -676,7 +862,7 @@
   <div class="wrap">
     <span class="kicker reveal">Solution &amp; Inspirational Quote</span>
     <h2 class="section-title reveal d1">Our inspiration.</h2>
-    <p class="section-sub reveal d2">JinSwara draws inspiration from आचार्यकल्प पंडित श्री टोडरमल जी, who was asked why he was writing a टीका (सम्यग्ज्ञानचंद्रिका) for the श्री गोमटसार scripture instead of just reading and teaching it. He fluently replied:</p>
+    <p class="section-sub reveal d2">JinSwara draws inspiration from आचार्यकल्प पंडित श्री टोडरमल जी, who was asked why he was writing a टीका (सम्यग्ज्ञानचंद्रिका) for the श्री गोम्मटसार scripture instead of just reading and teaching it. He fluently replied:</p>
     <div class="quote-block reveal d3">
       <span class="quote-mark">"</span>
       <p class="deva-quote">अन्य जीवों को ग्रन्थ अभ्यास कराने का संयोग दुर्लभ है और यदि संयोग तो भी किन्ही जीवों का ही अभ्यास हो पाता है, तथा ग्रन्थ की टीका रचने से पारम्परागत अनेक जीवों को अर्थ का ज्ञान होगा।</p>
@@ -758,11 +944,12 @@
     </div>
     <div class="foot-col">
       <h4>Projects</h4>
-      <a href="/#projects">Forum</a>
-      <a href="/#projects">Jinwani</a>
-      <a href="/#projects">Wordle</a>
-      <a href="/#projects">Niyam</a>
-      <a href="/#projects">Events</a>
+      <a href="/forum">Forum</a>
+      <a href="/jinwani">Jinwani</a>
+      <a href="/wordle">Wordle</a>
+      <a href="/niyam">Niyam</a>
+      <a href="/events/">Events</a>
+      <a href="/book-club">Book Club</a>
     </div>
     <div class="foot-col">
       <h4>Community</h4>
@@ -886,5 +1073,6 @@ if (window.matchMedia) {
   });
 }
 </script>
+<script src="/platforms-site.js" defer></script>
 </body>
 </html>

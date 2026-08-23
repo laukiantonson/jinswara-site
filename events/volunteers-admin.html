@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JinSwara — Volunteers Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+
+  .shell { display:flex; min-height:100vh; }
+
+  /* SIDEBAR — same as events admin */
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+
+  .content { padding:28px 32px 60px; max-width:1200px; }
+
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  .stat { background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 20px; }
+  .stat .n { font-size:26px; font-weight:800; font-family:'DM Sans'; }
+  .stat .l { font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .stat.c-coral .n { color:var(--coral); } .stat.c-teal .n { color:var(--teal); } .stat.c-gold .n { color:var(--gold); }
+
+  .panels { display:grid; grid-template-columns:1.15fr .85fr; gap:20px; align-items:start; }
+  .panel { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--card-border); }
+  .panel-head h3 { font-size:15px; font-weight:700; }
+  .btn-add { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--indigo),var(--violet));
+    border:none; color:#fff; font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; }
+
+  /* VOLUNTEER LIST */
+  .vol-list { max-height:640px; overflow-y:auto; }
+  .vol-row { display:flex; align-items:center; gap:12px; padding:12px 22px; border-bottom:1px solid rgba(255,255,255,.05); }
+  .vol-row:hover { background:rgba(255,255,255,.02); }
+  .vol-row.dragging { opacity:.35; }
+  .vol-row.drag-over-top { box-shadow: inset 0 2px 0 var(--teal); }
+  .vol-row.drag-over-bottom { box-shadow: inset 0 -2px 0 var(--teal); }
+  .vol-drag-handle { flex:none; width:16px; height:16px; cursor:grab; color:var(--ink-faint); display:grid; place-items:center; }
+  .vol-drag-handle svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .vol-search-row { display:flex; align-items:center; gap:10px; }
+  .vol-reorder-hint { font-size:11.5px; color:var(--ink-faint); padding:0 22px 10px; }
+  .vol-thumb { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--teal),var(--indigo)); flex:none;
+    display:grid; place-items:center; font-size:12px; font-weight:700; color:#fff; overflow:hidden; }
+  .vol-thumb img { width:100%; height:100%; object-fit:cover; }
+  .vol-info { flex:1; min-width:0; }
+  .vol-info .t { font-size:13.5px; font-weight:600; }
+  .vol-info .m { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:100px; flex:none; }
+  .badge.active { background:rgba(45,212,191,.15); color:var(--teal); }
+  .badge.other { background:rgba(196,181,253,.12); color:var(--lavender); }
+  .vol-actions { display:flex; gap:6px; }
+  .icon-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--ink-dim);
+    display:grid; place-items:center; cursor:pointer; }
+  .icon-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .icon-btn.danger:hover { color:var(--coral); border-color:rgba(255,107,107,.3); }
+  .vol-search { padding:14px 22px; border-bottom:1px solid var(--card-border); }
+  .vol-search input { width:100%; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px;
+    padding:9px 12px; color:var(--ink); font-size:13px; }
+
+  /* ADD FORM */
+  .form-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+  .field label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-dim); margin-bottom:6px; }
+  .field input, .field select { width:100%; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px;
+    padding:10px 12px; color:var(--ink); font-size:13.5px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .toggle-group { display:flex; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px; overflow:hidden; }
+  .toggle-opt { flex:1; text-align:center; padding:8px 6px; font-size:12.5px; font-weight:600; color:var(--ink-faint); cursor:pointer; }
+  .toggle-opt.sel { background:linear-gradient(135deg,var(--indigo),var(--violet)); color:#fff; }
+  .dropzone { border:1.5px dashed var(--card-border); border-radius:12px; padding:22px 10px; text-align:center;
+    color:var(--ink-faint); font-size:12.5px; cursor:pointer; }
+  .dropzone svg { width:22px; height:22px; stroke:var(--ink-faint); fill:none; stroke-width:1.6; margin-bottom:6px; }
+  .dropzone.has-preview { padding:8px; }
+  .dropzone img.preview { width:100%; max-height:140px; object-fit:cover; border-radius:8px; }
+  .form-actions { display:flex; gap:10px; margin-top:4px; }
+  .btn-save { flex:1; background:linear-gradient(135deg,var(--teal),var(--indigo)); border:none; color:#fff; font-weight:700;
+    font-size:13.5px; padding:11px; border-radius:10px; cursor:pointer; }
+  .btn-cancel { background:transparent; border:1px solid var(--card-border); color:var(--ink-dim); font-weight:600;
+    font-size:13.5px; padding:11px 18px; border-radius:10px; cursor:pointer; }
+
+  /* MOBILE — sidebar collapses to a horizontal scrollable tab bar so nav links
+     (incl. Events) never overflow off-screen or require horizontal scrolling */
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+.icon-btn{width:40px;height:40px;}
+.stats{grid-template-columns:repeat(2,1fr) !important;}.stat{min-width:0;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+(function(){
+  document.getElementById("admin-auth-btn").addEventListener("click", tryLogin);
+  document.getElementById("admin-auth-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") tryLogin(); });
+
+  async function verifyPw(pw) {
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: pw}) });
+      const data = await resp.json();
+      return !!data.ok;
+    } catch(e) { return false; }
+  }
+
+  async function tryLogin() {
+    const pw = document.getElementById("admin-auth-pw").value;
+    const errEl = document.getElementById("admin-auth-err");
+    errEl.textContent = "Checking…";
+    const ok = await verifyPw(pw);
+    if (ok) {
+      sessionStorage.setItem("jinswara_admin_pw", pw);
+      document.getElementById("admin-auth-gate").style.display = "none";
+    } else {
+      errEl.textContent = "Incorrect password";
+    }
+  }
+
+    // Optimistic unlock — hide the gate immediately if a cached password exists so
+  // refreshing the page never flashes the login screen for an already-authed admin.
+  // Still re-validate against the server in the background: a stale/rotated
+  // password gets caught and the gate re-shown, it just no longer blocks on every load.
+  (function(){
+    if (sessionStorage.getItem("jinswara_admin_pw")) {
+      document.getElementById("admin-auth-gate").style.display = "none";
+    }
+  })();
+  (async () => {
+    const saved = sessionStorage.getItem("jinswara_admin_pw");
+    if (saved) {
+      const ok = await verifyPw(saved);
+      if (!ok) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        document.getElementById("admin-auth-gate").style.display = "flex";
+      }
+    }
+  })();
+})();
+</script>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/events/admin-panel"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a class="active" href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a href="/events/platforms-admin"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Platforms</a>
+      <a href="/events/bookclub-admin"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Book Club</a>
+      <a href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Volunteers</h1><p>Add, edit &amp; photo-manage the volunteer roster</p></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat c-teal"><div class="n" id="stat-active">16</div><div class="l">Active Volunteers</div></div>
+        <div class="stat c-coral"><div class="n" id="stat-other">41</div><div class="l">Other Volunteers</div></div>
+        <div class="stat c-gold"><div class="n" id="stat-total">57</div><div class="l">Total on Roster</div></div>
+      </div>
+
+      <div class="panels">
+        <div class="panel">
+          <div class="panel-head"><h3>All Volunteers</h3><button class="btn-add" id="btn-new-vol">+ Add Volunteer</button></div>
+          <div class="vol-search"><input type="text" id="vol-search" placeholder="search by name or city..."></div>
+          <div class="vol-reorder-hint" id="vol-reorder-hint">drag rows by the ⠿ handle to reorder — this order controls how volunteers appear on the public site</div>
+          <div class="vol-list" id="vol-list"><!-- rows injected by JS --></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3 id="form-title">Add Volunteer</h3></div>
+          <div class="form-body">
+            <div class="field"><label>Full Name</label><input type="text" id="vol-name" placeholder="e.g. Pragya Jain"></div>
+            <div class="row2">
+              <div class="field"><label>City (optional, for disambiguation)</label><input type="text" id="vol-city" placeholder="e.g. Lonavala"></div>
+              <div class="field"><label>Status</label>
+                <div class="toggle-group" id="vol-status-toggle">
+                  <div class="toggle-opt sel" data-val="active">Active</div>
+                  <div class="toggle-opt" data-val="other">Other</div>
+                </div>
+              </div>
+            </div>
+            <div class="field"><label>Photo</label>
+              <div class="dropzone" id="vol-dropzone">
+                <svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><br>
+                <span id="vol-drop-text">drag a photo or click to upload</span>
+                <input type="file" id="vol-photo-input" accept="image/*" style="display:none;">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" id="btn-save-vol">Save Volunteer</button>
+              <button class="btn-cancel" id="btn-cancel-vol">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="del-confirm-overlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(3,5,15,.6);align-items:center;justify-content:center;">
+  <div style="background:#0e1430;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:26px 26px 20px;max-width:340px;width:90%;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:16px;color:#eef1ff;margin-bottom:8px;">Remove volunteer?</div>
+    <div id="del-confirm-msg" style="font-size:13.5px;color:#9aa3c7;margin-bottom:20px;line-height:1.4;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="del-confirm-cancel" style="background:transparent;border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 16px;color:#eef1ff;font-weight:600;font-size:13.5px;cursor:pointer;">Cancel</button>
+      <button id="del-confirm-yes" style="background:#ff6b6b;border:none;border-radius:9px;padding:9px 16px;color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;">Remove</button>
+    </div>
+  </div>
+</div>
+<script>
+  // ── Delete confirmation — shared modal, used before any destructive volunteer removal ──
+  function confirmDeleteVolunteer(name, onConfirm){
+    const overlay = document.getElementById('del-confirm-overlay');
+    document.getElementById('del-confirm-msg').textContent = `"${name}" will be permanently removed from the roster. This can't be undone.`;
+    overlay.style.display = 'flex';
+    const yesBtn = document.getElementById('del-confirm-yes');
+    const cancelBtn = document.getElementById('del-confirm-cancel');
+    function close(){ overlay.style.display = 'none'; yesBtn.removeEventListener('click', onYes); cancelBtn.removeEventListener('click', close); }
+    function onYes(){ close(); onConfirm(); }
+    yesBtn.addEventListener('click', onYes);
+    cancelBtn.addEventListener('click', close);
+  }
+
+  // ── Volunteer roster — live, backed by Supabase Storage (events-data/volunteers.json) ──
+  const VOLUNTEERS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/volunteers.json";
+  let VOLS = [];
+  let editingId = null;
+  let volsLoaded = false;
+
+  async function loadVols(){
+    try {
+      const resp = await fetch(VOLUNTEERS_URL + "?t=" + Date.now());
+      const data = await resp.json();
+      VOLS = data.map((v,i) => ({ id: (v.status||'other')+'-'+i, name: v.name, city: v.city||'', status: v.status||'other', photo: v.photoUrl || null }));
+    } catch(e) { console.error("failed to load volunteers", e); }
+    volsLoaded = true;
+    renderList();
+  }
+
+  async function persistVols(){
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const payload = VOLS.map(v => ({ name: v.name, city: v.city, status: v.status, photoUrl: v.photo || "" }));
+    try {
+      const resp = await fetch(ADMIN_API + "/save-volunteers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ volunteers: payload })
+      });
+      const data = await resp.json();
+      showSaveStatus(data.ok);
+    } catch(e) { showSaveStatus(false); }
+  }
+  function showSaveStatus(ok){
+    let el = document.getElementById('save-status-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'save-status-toast';
+      el.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:9998;transition:opacity .3s;';
+      document.body.appendChild(el);
+    }
+    el.textContent = ok ? '✓ Saved to database' : '✕ Save failed';
+    el.style.background = ok ? 'rgba(45,212,191,.15)' : 'rgba(255,107,107,.15)';
+    el.style.color = ok ? '#2dd4bf' : '#ff6b6b';
+    el.style.border = '1px solid ' + (ok ? 'rgba(45,212,191,.35)' : 'rgba(255,107,107,.35)');
+    el.style.opacity = '1';
+    setTimeout(() => { el.style.opacity = '0'; }, 2200);
+  }
+
+  function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+  function renderList(filter=''){
+    const list = document.getElementById('vol-list');
+    const f = filter.toLowerCase();
+    const dragEnabled = !f; // reorder only makes sense on the unfiltered, full-order list
+    document.getElementById('vol-reorder-hint').style.display = dragEnabled ? '' : 'none';
+    const rows = VOLS.filter(v => !f || v.name.toLowerCase().includes(f) || (v.city||'').toLowerCase().includes(f)).sort((a,b)=> (b.status==='active') - (a.status==='active'));
+    list.innerHTML = rows.map(v => `
+      <div class="vol-row" data-id="${v.id}" draggable="${dragEnabled}">
+        ${dragEnabled ? `<div class="vol-drag-handle"><svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>` : ''}
+        <div class="vol-thumb">${v.photo ? `<img src="${v.photo}">` : initials(v.name)}</div>
+        <div class="vol-info"><div class="t">${v.name}${v.city ? ` <span style="color:var(--ink-faint);font-weight:400;">(${v.city})</span>` : ''}</div>
+          <div class="m">${v.status === 'active' ? 'Active Volunteer' : 'Volunteer'}</div></div>
+        <span class="badge ${v.status}">${v.status === 'active' ? 'Active' : 'Other'}</span>
+        <div class="vol-actions">
+          <button class="icon-btn edit-vol"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          <button class="icon-btn danger del-vol"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+        </div>
+      </div>`).join('') || '<div style="padding:22px;color:var(--ink-faint);font-size:13px;">no matches</div>';
+    updateStats();
+    if (dragEnabled) bindDragReorder();
+  }
+
+  // ── Drag-to-reorder (native HTML5 DnD) — reorders VOLS array + persists ──
+  let dragSrcId = null;
+  function bindDragReorder(){
+    const list = document.getElementById('vol-list');
+    list.querySelectorAll('.vol-row[draggable="true"]').forEach(row => {
+      row.addEventListener('dragstart', e => {
+        dragSrcId = row.dataset.id;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        list.querySelectorAll('.vol-row').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+      });
+      row.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (row.dataset.id === dragSrcId) return;
+        const rect = row.getBoundingClientRect();
+        const before = (e.clientY - rect.top) < rect.height / 2;
+        list.querySelectorAll('.vol-row').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+        row.classList.add(before ? 'drag-over-top' : 'drag-over-bottom');
+      });
+      row.addEventListener('drop', e => {
+        e.preventDefault();
+        const targetId = row.dataset.id;
+        list.querySelectorAll('.vol-row').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+        if (!dragSrcId || dragSrcId === targetId) return;
+        const rect = row.getBoundingClientRect();
+        const before = (e.clientY - rect.top) < rect.height / 2;
+        const srcIdx = VOLS.findIndex(v => v.id === dragSrcId);
+        let tgtIdx = VOLS.findIndex(v => v.id === targetId);
+        if (srcIdx === -1 || tgtIdx === -1) return;
+        const [moved] = VOLS.splice(srcIdx, 1);
+        tgtIdx = VOLS.findIndex(v => v.id === targetId); // re-index after splice
+        VOLS.splice(before ? tgtIdx : tgtIdx + 1, 0, moved);
+        dragSrcId = null;
+        renderList(document.getElementById('vol-search').value);
+        persistVols();
+      });
+    });
+  }
+  function updateStats(){
+    document.getElementById('stat-active').textContent = VOLS.filter(v=>v.status==='active').length;
+    document.getElementById('stat-other').textContent = VOLS.filter(v=>v.status==='other').length;
+    document.getElementById('stat-total').textContent = VOLS.length;
+  }
+  function resetForm(){
+    editingId = null;
+    document.getElementById('form-title').textContent = 'Add Volunteer';
+    document.getElementById('vol-name').value = '';
+    document.getElementById('vol-city').value = '';
+    document.querySelectorAll('#vol-status-toggle .toggle-opt').forEach(o=>o.classList.toggle('sel', o.dataset.val==='active'));
+    document.getElementById('vol-dropzone').classList.remove('has-preview');
+    document.getElementById('vol-dropzone').innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><br><span>drag a photo or click to upload</span><input type="file" id="vol-photo-input" accept="image/*" style="display:none;">`;
+    document.getElementById('vol-dropzone').removeAttribute('data-photo');
+    bindDropzone();
+  }
+
+  document.getElementById('vol-search').addEventListener('input', e => renderList(e.target.value));
+  document.getElementById('btn-new-vol').addEventListener('click', resetForm);
+  document.getElementById('btn-cancel-vol').addEventListener('click', resetForm);
+
+  document.getElementById('vol-status-toggle').addEventListener('click', e => {
+    const opt = e.target.closest('.toggle-opt'); if(!opt) return;
+    document.querySelectorAll('#vol-status-toggle .toggle-opt').forEach(o=>o.classList.remove('sel'));
+    opt.classList.add('sel');
+  });
+
+  function bindDropzone(){
+    const dz = document.getElementById('vol-dropzone');
+    dz.addEventListener('click', () => document.getElementById('vol-photo-input').click());
+    document.getElementById('vol-photo-input').addEventListener('change', e => {
+      const file = e.target.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        dz.classList.add('has-preview');
+        dz.innerHTML = `<img class="preview" src="${ev.target.result}">`;
+        dz.dataset.photo = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  bindDropzone();
+
+  document.getElementById('btn-save-vol').addEventListener('click', async () => {
+    const name = document.getElementById('vol-name').value.trim();
+    if(!name){ document.getElementById('vol-name').focus(); return; }
+    const city = document.getElementById('vol-city').value.trim();
+    const status = document.querySelector('#vol-status-toggle .toggle-opt.sel').dataset.val;
+    let photo = document.getElementById('vol-dropzone').dataset.photo || null;
+    // if photo is a fresh data: URL, upload it to Storage and use the real URL instead
+    if (photo && photo.startsWith('data:')) {
+      const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+      const [meta, b64] = photo.split(',');
+      const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+      try {
+        const resp = await fetch(ADMIN_API + "/upload-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+          body: JSON.stringify({ filename: name.replace(/\s+/g,'-').toLowerCase()+'.jpg', dataBase64: b64, contentType: ct })
+        });
+        const data = await resp.json();
+        if (data.ok) photo = data.url;
+      } catch(e) { console.error('image upload failed', e); }
+    }
+    if(editingId){
+      const v = VOLS.find(x=>x.id===editingId);
+      Object.assign(v, {name, city, status, photo: photo || v.photo});
+    } else {
+      VOLS.unshift({id:'new-'+Date.now(), name, city, status, photo});
+    }
+    renderList(document.getElementById('vol-search').value);
+    resetForm();
+    persistVols();
+  });
+
+  document.getElementById('vol-list').addEventListener('click', e => {
+    const row = e.target.closest('.vol-row'); if(!row) return;
+    const id = row.dataset.id;
+    if(e.target.closest('.del-vol')){
+      const v = VOLS.find(x=>x.id===id);
+      confirmDeleteVolunteer(v ? v.name : 'this volunteer', () => {
+        VOLS = VOLS.filter(v=>v.id!==id);
+        renderList(document.getElementById('vol-search').value);
+        persistVols();
+      });
+      return;
+    }
+    if(e.target.closest('.edit-vol')){
+      const v = VOLS.find(x=>x.id===id);
+      editingId = id;
+      document.getElementById('form-title').textContent = 'Edit Volunteer';
+      document.getElementById('vol-name').value = v.name;
+      document.getElementById('vol-city').value = v.city || '';
+      document.querySelectorAll('#vol-status-toggle .toggle-opt').forEach(o=>o.classList.toggle('sel', o.dataset.val===v.status));
+      const dz = document.getElementById('vol-dropzone');
+      if(v.photo){ dz.classList.add('has-preview'); dz.innerHTML = `<img class="preview" src="${v.photo}">`; dz.dataset.photo=v.photo; } else { dz.classList.remove('has-preview'); dz.removeAttribute('data-photo'); dz.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><br><span>drag a photo or click to upload</span><input type="file" id="vol-photo-input" accept="image/*" style="display:none;">`; bindDropzone(); }
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  });
+
+  loadVols();
+</script>
+</body>
+</html>

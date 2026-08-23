@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JinSwara Events — Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+
+  .shell { display:flex; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+
+  /* MAIN */
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+
+  .content { padding:28px 32px 60px; max-width:1200px; }
+
+  /* STAT CARDS */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+  .stat { background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:18px 20px; }
+  .stat .n { font-size:26px; font-weight:800; font-family:'DM Sans'; }
+  .stat .l { font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .stat.c-coral .n { color:var(--coral); } .stat.c-teal .n { color:var(--teal); }
+  .stat.c-gold .n { color:var(--gold); } .stat.c-lav .n { color:var(--lavender); }
+
+  /* PANEL LAYOUT */
+  .panels { display:grid; grid-template-columns:1.15fr .85fr; gap:20px; align-items:start; }
+  .panel { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--card-border); }
+  .panel-head h3 { font-size:15px; font-weight:700; }
+  .btn-add { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--indigo),var(--violet));
+    color:#fff; font-size:13px; font-weight:700; padding:8px 15px; border-radius:9px; border:none; cursor:pointer; }
+
+  /* EVENTS LIST TABLE */
+  .ev-row { display:flex; align-items:center; gap:14px; padding:14px 22px; border-bottom:1px solid var(--card-border); }
+  .ev-row:last-child { border-bottom:none; }
+  .ev-thumb { width:44px; height:44px; border-radius:10px; flex:none;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 6px, rgba(255,255,255,.09) 6px, rgba(255,255,255,.09) 12px); }
+  .ev-info { flex:1; min-width:0; }
+  .ev-info .t { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ev-info .m { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+  .badge { font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; padding:4px 10px; border-radius:100px; flex:none; }
+  .badge.live { color:var(--coral); background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.3); }
+  .badge.past { color:var(--ink-faint); background:rgba(255,255,255,.05); border:1px solid var(--card-border); }
+  .ev-actions { display:flex; gap:6px; flex:none; }
+  .icon-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--card-border); background:transparent;
+    display:grid; place-items:center; cursor:pointer; color:var(--ink-dim); }
+  .icon-btn:hover { border-color:rgba(139,92,246,.4); color:var(--ink); }
+  .icon-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .icon-btn.danger:hover { border-color:rgba(255,107,107,.4); color:var(--coral); }
+
+  /* FORM */
+  .form-body { padding:20px 22px 24px; display:flex; flex-direction:column; gap:15px; }
+  .field label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-dim); margin-bottom:6px; }
+  .field input, .field select, .field textarea { width:100%; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    color:var(--ink); padding:10px 13px; border-radius:10px; font-size:13.5px; font-family:'Inter'; }
+  .field select option { color:#1a1a2e; background:#fff; }
+  .field textarea { resize:vertical; min-height:56px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .toggle-group { display:flex; gap:8px; }
+  .toggle-opt { flex:1; text-align:center; padding:9px; border-radius:9px; border:1px solid var(--card-border); font-size:12.5px; font-weight:600; color:var(--ink-faint); cursor:pointer; }
+  .toggle-opt.sel { background:rgba(139,92,246,.15); border-color:rgba(139,92,246,.4); color:var(--lavender); }
+  .dropzone { border:1.5px dashed var(--card-border); border-radius:12px; padding:22px 14px; text-align:center; color:var(--ink-faint); font-size:12.5px; }
+  .dropzone svg { width:22px; height:22px; stroke:var(--ink-faint); fill:none; stroke-width:1.6; margin-bottom:6px; }
+  .form-actions { display:flex; gap:10px; padding-top:4px; }
+  .btn-save { flex:1; background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal)); color:#fff; font-weight:700;
+    font-size:13.5px; padding:11px; border-radius:10px; border:none; cursor:pointer; }
+  .btn-cancel { padding:11px 18px; border-radius:10px; border:1px solid var(--card-border); background:transparent; color:var(--ink-dim); font-size:13.5px; font-weight:600; cursor:pointer; }
+
+  /* MEDIA LINKS */
+  .link-count { font-size:11.5px; color:var(--ink-faint); font-weight:600; flex:none; display:flex; align-items:center; gap:3px; }
+  .btn-add-links { margin-top:8px; background:rgba(139,92,246,.14); border:1px solid rgba(139,92,246,.35); color:var(--lavender);
+    font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:9px; cursor:pointer; }
+  .btn-add-links:hover { background:rgba(139,92,246,.22); }
+  .media-link-hint { font-size:11px; color:var(--ink-faint); margin-top:8px; }
+  .media-link-list { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .media-link-empty { font-size:12.5px; color:var(--ink-faint); font-style:italic; padding:10px 2px; }
+  .media-link-row { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    border-radius:10px; padding:8px 10px; }
+  .ml-platform { flex:none; width:26px; height:26px; border-radius:7px; display:grid; place-items:center; font-size:12px; font-weight:800; }
+  .ml-platform.youtube { background:rgba(255,107,107,.15); color:#ff5c5c; }
+  .ml-platform.instagram { background:linear-gradient(135deg,#f472b6,#fbbf24); color:#fff; }
+  .ml-platform.other { background:rgba(255,255,255,.08); color:var(--ink-faint); }
+  .ml-url { flex:1; min-width:0; font-size:12.5px; color:var(--ink-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ml-controls { display:flex; gap:3px; flex:none; }
+  /* JUDGES PANEL */
+  .jury-add-form { display:flex; flex-direction:column; gap:8px; margin-top:8px; background:rgba(255,255,255,.02); border:1px solid var(--card-border); border-radius:12px; padding:12px; }
+  .jury-add-form input[type=text], .jury-add-form textarea { width:100%; }
+  .jury-add-form textarea { min-height:52px; resize:vertical; }
+  .jury-list { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .jury-empty { font-size:12.5px; color:var(--ink-faint); font-style:italic; padding:10px 2px; }
+  .jury-row { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.03); border:1px solid var(--card-border);
+    border-radius:10px; padding:10px 12px; }
+  .jury-avatar { flex:none; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--pink));
+    display:grid; place-items:center; font-size:13px; font-weight:800; color:#fff; overflow:hidden; }
+  .jury-avatar img { width:100%; height:100%; object-fit:cover; }
+  .jury-info { flex:1; min-width:0; }
+  .jury-info .jn { font-size:13.5px; font-weight:700; color:var(--ink); }
+  .jury-info .je { font-size:11.5px; color:var(--teal); font-weight:600; margin-top:1px; }
+  .jury-info .jb { font-size:11.5px; color:var(--ink-faint); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .jury-controls { display:flex; gap:3px; flex:none; }
+  .ml-btn { width:24px; height:24px; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--ink-faint);
+    display:grid; place-items:center; cursor:pointer; font-size:11px; line-height:1; }
+  .ml-btn:hover { border-color:rgba(139,92,246,.4); color:var(--ink); }
+  .ml-btn.ml-remove:hover { border-color:rgba(255,107,107,.4); color:var(--coral); }
+  .ml-btn:disabled { opacity:.25; cursor:default; }
+  #media-links-editing-tag { font-weight:700; color:var(--teal); text-transform:none; letter-spacing:0; }
+
+  /* MOBILE — sidebar collapses to a horizontal scrollable tab bar so nav links
+     (incl. Events) never overflow off-screen or require horizontal scrolling */
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+.icon-btn{width:40px;height:40px;}
+input[type="checkbox"]{width:20px !important;height:20px !important;min-width:20px;}
+.stats{grid-template-columns:repeat(2,1fr) !important;}.stat{min-width:0;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+(function(){
+  document.getElementById("admin-auth-btn").addEventListener("click", tryLogin);
+  document.getElementById("admin-auth-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") tryLogin(); });
+
+  async function verifyPw(pw) {
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: pw}) });
+      const data = await resp.json();
+      return !!data.ok;
+    } catch(e) { return false; }
+  }
+
+  async function tryLogin() {
+    const pw = document.getElementById("admin-auth-pw").value;
+    const errEl = document.getElementById("admin-auth-err");
+    errEl.textContent = "Checking…";
+    const ok = await verifyPw(pw);
+    if (ok) {
+      sessionStorage.setItem("jinswara_admin_pw", pw);
+      document.getElementById("admin-auth-gate").style.display = "none";
+    } else {
+      errEl.textContent = "Incorrect password";
+    }
+  }
+
+    // Optimistic unlock — hide the gate immediately if a cached password exists so
+  // refreshing the page never flashes the login screen for an already-authed admin.
+  // Still re-validate against the server in the background: a stale/rotated
+  // password gets caught and the gate re-shown, it just no longer blocks on every load.
+  (function(){
+    if (sessionStorage.getItem("jinswara_admin_pw")) {
+      document.getElementById("admin-auth-gate").style.display = "none";
+    }
+  })();
+  (async () => {
+    const saved = sessionStorage.getItem("jinswara_admin_pw");
+    if (saved) {
+      const ok = await verifyPw(saved);
+      if (!ok) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        document.getElementById("admin-auth-gate").style.display = "flex";
+      }
+    }
+  })();
+})();
+</script>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/events/admin-panel"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a href="/events/platforms-admin"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Platforms</a>
+      <a href="/events/bookclub-admin"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Book Club</a>
+      <a class="active" href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Archive</h1><p>Past events — completed competitions, results &amp; winners</p></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat c-coral"><div class="n" id="stat-ongoing">0</div><div class="l">Ongoing</div></div>
+        <div class="stat c-gold"><div class="n" id="stat-upcoming">0</div><div class="l">Upcoming</div></div>
+        <div class="stat c-teal"><div class="n" id="stat-past">0</div><div class="l">Past</div></div>
+        <div class="stat c-lav"><div class="n" id="stat-media-links">0</div><div class="l">Media Links</div></div>
+      </div>
+
+      <div class="panels" style="grid-template-columns:1fr;max-width:780px;">
+        <div class="panel">
+          <div class="panel-head"><h3>Past Events</h3><button class="btn-add" id="btn-new-event" style="display:none;">+ New Event</button></div>
+          <div id="ev-rows"><div style="padding:22px;color:var(--ink-faint);font-size:13px;">loading…</div></div>
+        </div>
+
+        <div class="panel" id="event-form-panel" style="display:none">
+          <div class="panel-head"><h3 id="form-title">Add Event</h3></div>
+          <div class="form-body">
+            <div class="field"><label>Event Title</label><input type="text" id="ev-title-input" placeholder="e.g. Kavya Srajan — Poetry Contest"></div>
+            <div class="row2">
+              <div class="field"><label>Event Type</label><select id="ev-type-select"></select></div>
+              <div class="field"><label>Status</label>
+                <div class="toggle-group" id="ev-status-toggle">
+                  <div class="toggle-opt sel" data-val="ongoing">Ongoing</div>
+                  <div class="toggle-opt" data-val="upcoming">Upcoming</div>
+                  <div class="toggle-opt" data-val="past">Past</div>
+                </div>
+              </div>
+            </div>
+            <div class="field" id="ev-locked-banner" style="display:none;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:10px;padding:12px 14px;align-items:center;justify-content:space-between;">
+              <span style="font-size:12.5px;color:var(--coral);font-weight:600;">🔒 locked — winners announced, editing disabled to prevent accidents</span>
+              <button type="button" class="btn-cancel" id="btn-unlock-event" style="padding:6px 12px;font-size:12px;">Unlock</button>
+            </div>
+            <div class="field"><label>Last Date to Submit</label><input type="date" id="ev-lastdate-input"></div>
+            <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="ev-winners-checkbox" style="width:auto;"> Winners Announced <span style="color:var(--ink-faint);font-weight:400;">(auto-locks the event once status is Past)</span></label></div>
+            <div class="field"><label>Age Category</label><div id="ev-agecat-checks" style="display:flex;flex-wrap:wrap;gap:8px;"></div></div>
+            <div class="field"><label>Banner Image</label>
+              <div class="dropzone" id="ev-banner-dropzone"><svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><br><span id="ev-banner-label">Drag a banner image here or click to upload</span><input type="file" id="ev-banner-input" accept="image/*" style="display:none;"></div>
+            </div>
+            <div class="field"><label>Submit Entry Form URL</label><input type="text" id="ev-formurl-input" placeholder="https://forms.gle/..."></div>
+            <div class="field" id="media-links-field">
+              <label>Event Media Links (YouTube / Instagram) <span id="media-links-editing-tag"></span></label>
+              <input type="text" id="media-link-input" placeholder="paste a YouTube or Instagram link, press Enter to add">
+              <button type="button" class="btn-add-links" id="media-link-add-btn">+ Add</button>
+              <div class="media-link-list" id="media-link-list"><div class="media-link-empty" id="media-link-empty">no links added yet</div></div>
+              <div class="media-link-hint">drag or use ↑↓ to reorder — this order is how they'll appear on the event page</div>
+            </div>
+            <div class="field" id="jury-panel-field">
+              <label>Judges Panel <span id="jury-editing-tag"></span></label>
+              <div class="jury-add-form" id="jury-add-form">
+                <input type="text" id="jury-name-input" placeholder="Judge name">
+                <input type="text" id="jury-expertise-input" placeholder="Expertise / role (e.g. Senior Poet)">
+                <textarea id="jury-bio-textarea" placeholder="Short bio (optional)"></textarea>
+                <div class="dropzone" id="jury-photo-dropzone" style="padding:14px;"><span id="jury-photo-label">Click to upload judge photo (optional)</span><input type="file" id="jury-photo-input" accept="image/*" style="display:none;"></div>
+                <button type="button" class="btn-add-links" id="jury-add-btn" style="align-self:flex-start;">+ Add Judge</button>
+              </div>
+              <div class="jury-list" id="jury-list"><div class="jury-empty" id="jury-empty">no judges added yet</div></div>
+            </div>
+            <div class="field" id="winners-field">
+              <label>Winners <span id="winners-editing-tag"></span></label>
+              <div class="jury-add-form" id="winner-add-form">
+                <input type="text" id="winner-position-input" placeholder="Position (e.g. 1st, 2nd)">
+                <input type="text" id="winner-name-input" placeholder="Participant name">
+                <input type="text" id="winner-city-input" placeholder="City">
+                <div class="row2">
+                  <select id="winner-entrytype-select">
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="audio">Audio</option>
+                    <option value="link">Link</option>
+                  </select>
+                  <input type="text" id="winner-entry-input" placeholder="Entry content / link">
+                </div>
+                <button type="button" class="btn-add-links" id="winner-add-btn" style="align-self:flex-start;">+ Add Winner</button>
+              </div>
+              <div class="jury-list" id="winner-list"><div class="jury-empty" id="winner-empty">no winners added yet</div></div>
+            </div>
+            <div class="field"><label>Description / Rules</label><textarea id="ev-desc-textarea" placeholder="Short description, eligibility, age category, rules..."></textarea><div style="font-size:11.5px;color:var(--ink-faint,#8a8a93);margin-top:5px;">Markdown supported &mdash; **bold**, *italic*, # heading, - list, [link](url)</div></div>
+            <div class="form-actions">
+              <button class="btn-save" id="btn-save-event">Save Event</button>
+              <button class="btn-cancel" id="btn-cancel-event">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // ── Events admin — live, backed by Supabase Storage (events-data/events.json) ──
+  const EVENTS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/events.json";
+  const SETTINGS_URL = "https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/settings.json";
+  const DEFAULT_SETTINGS = { eventTypes: ["Kavya","Recitation","Quiz","Essay"], ageCategories: ["Bal Varg","Yuva Varg","Praudh Varg","Open Category"] };
+  let EVENTS = [];
+  let SETTINGS = { eventTypes: [], ageCategories: [] };
+  let currentEventId = null; // event being edited (media links + form)
+  let bannerDataUrl = null;
+
+  function esc(s){ return (s||'').toString().replace(/</g,'&lt;'); }
+
+  async function loadSettings(){
+    try {
+      const resp = await fetch(SETTINGS_URL + "?t=" + Date.now());
+      if (!resp.ok) throw new Error('no settings yet');
+      SETTINGS = await resp.json();
+      if (!Array.isArray(SETTINGS.eventTypes)) SETTINGS.eventTypes = [...DEFAULT_SETTINGS.eventTypes];
+      if (!Array.isArray(SETTINGS.ageCategories)) SETTINGS.ageCategories = [...DEFAULT_SETTINGS.ageCategories];
+    } catch(e) {
+      SETTINGS = { eventTypes: [...DEFAULT_SETTINGS.eventTypes], ageCategories: [...DEFAULT_SETTINGS.ageCategories] };
+    }
+    const typeSel = document.getElementById('ev-type-select');
+    typeSel.innerHTML = SETTINGS.eventTypes.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    const catsWrap = document.getElementById('ev-agecat-checks');
+    catsWrap.innerHTML = SETTINGS.ageCategories.map(c =>
+      `<label style="display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-dim);background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:8px;padding:6px 10px;cursor:pointer;">
+        <input type="checkbox" class="ev-agecat-cb" value="${esc(c)}" style="width:auto;">${esc(c)}
+      </label>`
+    ).join('');
+  }
+
+  async function loadEvents(){
+    try {
+      const resp = await fetch(EVENTS_URL + "?t=" + Date.now());
+      EVENTS = await resp.json();
+    } catch(e) { console.error('failed to load events', e); EVENTS = []; }
+    renderRows();
+    updateStats();
+  }
+
+  function renderRows(){
+    const wrap = document.getElementById('ev-rows');
+    const pastEvents = EVENTS.filter(e => e.status === 'past');
+    if (!pastEvents.length) { wrap.innerHTML = '<div style="padding:22px;color:var(--ink-faint);font-size:13px;">no past events yet — completed events will appear here</div>'; return; }
+    wrap.innerHTML = pastEvents.map(ev => {
+      const badge = ev.status === 'ongoing' ? '<span class="badge live">Live</span>' : ev.status === 'upcoming' ? '<span class="badge past">Upcoming</span>' : '<span class="badge past">Past</span>';
+      const meta = ev.status === 'ongoing' ? ('closes ' + (ev.lastDateOfSubmission || '—')) : ev.status === 'upcoming' ? ('opens ' + [ev.month, ev.year].filter(Boolean).join(' ')) : 'completed';
+      const linkCount = (ev.mediaLinks || []).length;
+      return `<div class="ev-row" data-event-id="${esc(ev.eventId)}">
+        <div class="ev-thumb"${ev.bannerImageUrl ? ` style="background-image:url('${esc(ev.bannerImageUrl)}');background-size:cover;"` : ''}></div>
+        <div class="ev-info"><div class="t">${ev.locked ? '🔒 ' : ''}${esc(ev.title && ev.title.en)}</div><div class="m">${esc(ev.status)} · ${esc(meta)}</div></div>
+        <span class="link-count">${linkCount ? '🔗 ' + linkCount : ''}</span>
+        ${badge}
+        <div class="ev-actions">
+          <button class="icon-btn ev-edit-btn" data-id="${esc(ev.eventId)}"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          <button class="icon-btn danger ev-del-btn" data-id="${esc(ev.eventId)}"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+        </div>
+      </div>`;
+    }).join('');
+    wrap.querySelectorAll('.ev-edit-btn').forEach(btn => btn.addEventListener('click', () => { location.href = 'edit-event?id=' + encodeURIComponent(btn.dataset.id); }));
+    wrap.querySelectorAll('.ev-del-btn').forEach(btn => btn.addEventListener('click', () => deleteEvent(btn.dataset.id)));
+  }
+
+  function updateStats(){
+    document.getElementById('stat-ongoing').textContent = EVENTS.filter(e => e.status === 'ongoing').length;
+    document.getElementById('stat-upcoming').textContent = EVENTS.filter(e => e.status === 'upcoming').length;
+    document.getElementById('stat-past').textContent = EVENTS.filter(e => e.status === 'past').length;
+    document.getElementById('stat-media-links').textContent = EVENTS.reduce((sum, e) => sum + ((e.mediaLinks || []).length), 0);
+  }
+
+  async function persistEvents(){
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    try {
+      const resp = await fetch(ADMIN_API + "/save-events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ events: EVENTS })
+      });
+      const data = await resp.json();
+      showSaveStatus(data.ok);
+    } catch(e) { showSaveStatus(false); }
+  }
+  function showSaveStatus(ok){
+    let el = document.getElementById('save-status-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'save-status-toast';
+      el.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:9998;transition:opacity .3s;';
+      document.body.appendChild(el);
+    }
+    el.textContent = ok ? '✓ Saved to database' : '✕ Save failed';
+    el.style.background = ok ? 'rgba(45,212,191,.15)' : 'rgba(255,107,107,.15)';
+    el.style.color = ok ? '#2dd4bf' : '#ff6b6b';
+    el.style.border = '1px solid ' + (ok ? 'rgba(45,212,191,.35)' : 'rgba(255,107,107,.35)');
+    el.style.opacity = '1';
+    setTimeout(() => { el.style.opacity = '0'; }, 2200);
+  }
+
+  function detectPlatform(url) {
+    if (/youtu\.?be/i.test(url)) return 'youtube';
+    if (/instagram\.com/i.test(url)) return 'instagram';
+    return 'other';
+  }
+
+  function renderMediaLinks() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const links = ev ? (ev.mediaLinks || []) : [];
+    const list = document.getElementById('media-link-list');
+    const empty = document.getElementById('media-link-empty');
+    list.querySelectorAll('.media-link-row').forEach(r => r.remove());
+    if (!links.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    links.forEach((link, i) => {
+      const row = document.createElement('div');
+      row.className = 'media-link-row';
+      if (i === editingLinkIndex) {
+        row.innerHTML =
+          '<input type="text" class="ml-edit-input" value="' + esc(link.url) + '" style="flex:1;min-width:0;font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+          '<div class="ml-controls">' +
+            '<button type="button" class="ml-btn ml-save">✓</button>' +
+            '<button type="button" class="ml-btn ml-cancel">✕</button>' +
+          '</div>';
+        const input = row.querySelector('.ml-edit-input');
+        row.querySelector('.ml-save').onclick = () => {
+          const v = input.value.trim();
+          if (v) { link.url = v; link.platform = detectPlatform(v); }
+          editingLinkIndex = null; renderMediaLinks();
+        };
+        row.querySelector('.ml-cancel').onclick = () => { editingLinkIndex = null; renderMediaLinks(); };
+      } else {
+        const iconLabel = link.platform === 'youtube' ? 'YT' : link.platform === 'instagram' ? 'IG' : '🔗';
+        row.innerHTML =
+          '<div class="ml-platform ' + link.platform + '">' + iconLabel + '</div>' +
+          '<div class="ml-url">' + esc(link.url) + '</div>' +
+          '<div class="ml-controls">' +
+            '<button type="button" class="ml-btn ml-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn ml-down" ' + (i === links.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn ml-edit">✎</button>' +
+            '<button type="button" class="ml-btn ml-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.ml-up').onclick = () => { if (i > 0) { [links[i-1], links[i]] = [links[i], links[i-1]]; renderMediaLinks(); } };
+        row.querySelector('.ml-down').onclick = () => { if (i < links.length - 1) { [links[i+1], links[i]] = [links[i], links[i+1]]; renderMediaLinks(); } };
+        row.querySelector('.ml-edit').onclick = () => { editingLinkIndex = i; renderMediaLinks(); };
+        row.querySelector('.ml-remove').onclick = () => { links.splice(i, 1); renderMediaLinks(); };
+      }
+      list.appendChild(row);
+    });
+  }
+  let editingLinkIndex = null;
+
+  document.getElementById('media-link-add-btn').onclick = () => {
+    const inp = document.getElementById('media-link-input');
+    const lines = inp.value.split(/[\n,]+/).map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return;
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.mediaLinks) ev.mediaLinks = [];
+    lines.forEach(url => ev.mediaLinks.push({ url, platform: detectPlatform(url) }));
+    inp.value = '';
+    renderMediaLinks();
+  };
+  document.getElementById('media-link-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('media-link-add-btn').click(); }
+  });
+
+  // ── Judges Panel (CRUD, incl. photo) ──
+  let juryPhotoDataUrl = null;
+  let editingJuryIndex = null;
+
+  document.getElementById('jury-photo-dropzone').addEventListener('click', () => document.getElementById('jury-photo-input').click());
+  document.getElementById('jury-photo-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      juryPhotoDataUrl = ev.target.result;
+      document.getElementById('jury-photo-label').textContent = file.name + ' — ready to add';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function uploadJuryPhoto(dataUrl, nameHint) {
+    const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+    const [meta, b64] = dataUrl.split(',');
+    const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+    try {
+      const resp = await fetch(ADMIN_API + "/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+        body: JSON.stringify({ filename: (nameHint||'judge').replace(/\s+/g,'-').toLowerCase()+'-photo-'+Date.now()+'.jpg', dataBase64: b64, contentType: ct })
+      });
+      const data = await resp.json();
+      return data.ok ? data.url : null;
+    } catch(e) { console.error('judge photo upload failed', e); return null; }
+  }
+
+  function resetJuryAddForm() {
+    document.getElementById('jury-name-input').value = '';
+    document.getElementById('jury-expertise-input').value = '';
+    document.getElementById('jury-bio-textarea').value = '';
+    document.getElementById('jury-photo-label').textContent = 'Click to upload judge photo (optional)';
+    document.getElementById('jury-photo-input').value = '';
+    juryPhotoDataUrl = null;
+  }
+
+  document.getElementById('jury-add-btn').addEventListener('click', async () => {
+    const name = document.getElementById('jury-name-input').value.trim();
+    if (!name) { document.getElementById('jury-name-input').focus(); return; }
+    const expertise = document.getElementById('jury-expertise-input').value.trim();
+    const bio = document.getElementById('jury-bio-textarea').value.trim();
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.juryPanel) ev.juryPanel = [];
+    let photoUrl = '';
+    if (juryPhotoDataUrl) {
+      const btn = document.getElementById('jury-add-btn');
+      btn.textContent = 'Uploading…'; btn.disabled = true;
+      photoUrl = await uploadJuryPhoto(juryPhotoDataUrl, name) || '';
+      btn.textContent = '+ Add Judge'; btn.disabled = false;
+    }
+    ev.juryPanel.push({ name, expertise, bio, photoUrl });
+    resetJuryAddForm();
+    renderJury();
+    await persistEvents();
+  });
+
+  function renderJury() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const jury = ev ? (ev.juryPanel || []) : [];
+    const list = document.getElementById('jury-list');
+    const empty = document.getElementById('jury-empty');
+    list.querySelectorAll('.jury-row').forEach(r => r.remove());
+    if (!jury.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    jury.forEach((j, i) => {
+      const row = document.createElement('div');
+      row.className = 'jury-row';
+      if (i === editingJuryIndex) {
+        row.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">' +
+            '<input type="text" class="jr-name-input" value="' + esc(j.name) + '" placeholder="Judge name" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="jr-exp-input" value="' + esc(j.expertise||'') + '" placeholder="Expertise / role" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<textarea class="jr-bio-input" placeholder="Short bio" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);min-height:44px;">' + esc(j.bio||'') + '</textarea>' +
+          '</div>' +
+          '<div class="jury-controls" style="align-self:flex-start;">' +
+            '<button type="button" class="ml-btn jr-save">✓</button>' +
+            '<button type="button" class="ml-btn jr-cancel">✕</button>' +
+          '</div>';
+        row.querySelector('.jr-save').onclick = () => {
+          const nm = row.querySelector('.jr-name-input').value.trim();
+          if (nm) {
+            j.name = nm;
+            j.expertise = row.querySelector('.jr-exp-input').value.trim();
+            j.bio = row.querySelector('.jr-bio-input').value.trim();
+          }
+          editingJuryIndex = null; renderJury();
+          persistEvents();
+        };
+        row.querySelector('.jr-cancel').onclick = () => { editingJuryIndex = null; renderJury(); };
+      } else {
+        const initials = (j.name||'?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+        row.innerHTML =
+          '<div class="jury-avatar">' + (j.photoUrl ? '<img src="' + esc(j.photoUrl) + '">' : initials) + '</div>' +
+          '<div class="jury-info">' +
+            '<div class="jn">' + esc(j.name) + '</div>' +
+            (j.expertise ? '<div class="je">' + esc(j.expertise) + '</div>' : '') +
+            (j.bio ? '<div class="jb">' + esc(j.bio) + '</div>' : '') +
+          '</div>' +
+          '<div class="jury-controls">' +
+            '<button type="button" class="ml-btn jr-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn jr-down" ' + (i === jury.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn jr-edit">✎</button>' +
+            '<button type="button" class="ml-btn jr-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.jr-up').onclick = () => { if (i > 0) { [jury[i-1], jury[i]] = [jury[i], jury[i-1]]; renderJury(); persistEvents(); } };
+        row.querySelector('.jr-down').onclick = () => { if (i < jury.length - 1) { [jury[i+1], jury[i]] = [jury[i], jury[i+1]]; renderJury(); persistEvents(); } };
+        row.querySelector('.jr-edit').onclick = () => { editingJuryIndex = i; renderJury(); };
+        row.querySelector('.jr-remove').onclick = () => { if (confirm('Remove ' + j.name + ' from the judges panel?')) { jury.splice(i, 1); renderJury(); persistEvents(); } };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  // ── Winners (CRUD) ──
+  let editingWinnerIndex = null;
+
+  function resetWinnerAddForm() {
+    document.getElementById('winner-position-input').value = '';
+    document.getElementById('winner-name-input').value = '';
+    document.getElementById('winner-city-input').value = '';
+    document.getElementById('winner-entrytype-select').value = 'text';
+    document.getElementById('winner-entry-input').value = '';
+  }
+
+  document.getElementById('winner-add-btn').addEventListener('click', () => {
+    const name = document.getElementById('winner-name-input').value.trim();
+    if (!name) { document.getElementById('winner-name-input').focus(); return; }
+    const position = document.getElementById('winner-position-input').value.trim();
+    const city = document.getElementById('winner-city-input').value.trim();
+    const entryType = document.getElementById('winner-entrytype-select').value;
+    const entryContent = document.getElementById('winner-entry-input').value.trim();
+    let ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!ev.results) ev.results = { winners: [], participants: [], gallery: [] };
+    if (!ev.results.winners) ev.results.winners = [];
+    ev.results.winners.push({ position, participantName: name, city, winningEntry: { type: entryType, content: entryContent } });
+    resetWinnerAddForm();
+    renderWinners();
+  });
+
+  function renderWinners() {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    const winners = ev && ev.results ? (ev.results.winners || []) : [];
+    const list = document.getElementById('winner-list');
+    const empty = document.getElementById('winner-empty');
+    list.querySelectorAll('.jury-row').forEach(r => r.remove());
+    if (!winners.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    winners.forEach((w, i) => {
+      const row = document.createElement('div');
+      row.className = 'jury-row';
+      if (i === editingWinnerIndex) {
+        row.innerHTML =
+          '<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">' +
+            '<input type="text" class="wn-pos-input" value="' + esc(w.position||'') + '" placeholder="Position" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--teal);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="wn-name-input" value="' + esc(w.participantName||'') + '" placeholder="Participant name" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="wn-city-input" value="' + esc(w.city||'') + '" placeholder="City" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+            '<input type="text" class="wn-entry-input" value="' + esc((w.winningEntry||{}).content||'') + '" placeholder="Entry content / link" style="font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--card-border);background:transparent;color:var(--ink);">' +
+          '</div>' +
+          '<div class="jury-controls" style="align-self:flex-start;">' +
+            '<button type="button" class="ml-btn wn-save">✓</button>' +
+            '<button type="button" class="ml-btn wn-cancel">✕</button>' +
+          '</div>';
+        row.querySelector('.wn-save').onclick = () => {
+          const nm = row.querySelector('.wn-name-input').value.trim();
+          if (nm) {
+            w.position = row.querySelector('.wn-pos-input').value.trim();
+            w.participantName = nm;
+            w.city = row.querySelector('.wn-city-input').value.trim();
+            if (!w.winningEntry) w.winningEntry = { type: 'text' };
+            w.winningEntry.content = row.querySelector('.wn-entry-input').value.trim();
+          }
+          editingWinnerIndex = null; renderWinners();
+        };
+        row.querySelector('.wn-cancel').onclick = () => { editingWinnerIndex = null; renderWinners(); };
+      } else {
+        const entry = w.winningEntry || {};
+        row.innerHTML =
+          '<div class="jury-avatar">' + esc(w.position || (i+1)) + '</div>' +
+          '<div class="jury-info">' +
+            '<div class="jn">' + esc(w.participantName) + '</div>' +
+            (w.city ? '<div class="je">' + esc(w.city) + '</div>' : '') +
+            (entry.content ? '<div class="jb">' + esc(entry.type || 'text') + ': ' + esc(entry.content) + '</div>' : '') +
+          '</div>' +
+          '<div class="jury-controls">' +
+            '<button type="button" class="ml-btn wn-up" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+            '<button type="button" class="ml-btn wn-down" ' + (i === winners.length - 1 ? 'disabled' : '') + '>↓</button>' +
+            '<button type="button" class="ml-btn wn-edit">✎</button>' +
+            '<button type="button" class="ml-btn wn-remove">✕</button>' +
+          '</div>';
+        row.querySelector('.wn-up').onclick = () => { if (i > 0) { [winners[i-1], winners[i]] = [winners[i], winners[i-1]]; renderWinners(); } };
+        row.querySelector('.wn-down').onclick = () => { if (i < winners.length - 1) { [winners[i+1], winners[i]] = [winners[i], winners[i+1]]; renderWinners(); } };
+        row.querySelector('.wn-edit').onclick = () => { editingWinnerIndex = i; renderWinners(); };
+        row.querySelector('.wn-remove').onclick = () => { if (confirm('Remove ' + w.participantName + ' from winners?')) { winners.splice(i, 1); renderWinners(); } };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  function setFormEditable(editable){
+    const ids = ['ev-title-input','ev-type-select','ev-lastdate-input','ev-winners-checkbox','ev-formurl-input','ev-desc-textarea','ev-banner-input'];
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = !editable; });
+    document.querySelectorAll('#ev-status-toggle .toggle-opt, .ev-agecat-cb').forEach(el => {
+      if (el.tagName === 'INPUT') el.disabled = !editable;
+      else el.style.pointerEvents = editable ? '' : 'none';
+    });
+    document.getElementById('ev-banner-dropzone').style.pointerEvents = editable ? '' : 'none';
+    document.getElementById('btn-save-event').style.display = editable ? '' : 'none';
+    document.getElementById('ev-locked-banner').style.display = editable ? 'none' : 'flex';
+  }
+
+  function resetForm(){
+    currentEventId = null;
+    bannerDataUrl = null;
+    document.getElementById('form-title').textContent = 'Add Event';
+    document.getElementById('ev-title-input').value = '';
+    if (SETTINGS.eventTypes[0]) document.getElementById('ev-type-select').value = SETTINGS.eventTypes[0];
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.toggle('sel', o.dataset.val === 'ongoing'));
+    document.getElementById('ev-lastdate-input').value = '';
+    document.querySelectorAll('.ev-agecat-cb').forEach(cb => cb.checked = false);
+    document.getElementById('ev-winners-checkbox').checked = false;
+    document.getElementById('ev-formurl-input').value = '';
+    document.getElementById('ev-desc-textarea').value = '';
+    document.getElementById('ev-banner-label').textContent = 'Drag a banner image here or click to upload';
+    document.getElementById('media-links-editing-tag').textContent = '';
+    document.getElementById('media-link-list').querySelectorAll('.media-link-row').forEach(r => r.remove());
+    document.getElementById('media-link-empty').style.display = '';
+    document.getElementById('jury-editing-tag').textContent = '';
+    resetJuryAddForm();
+    editingJuryIndex = null;
+    document.getElementById('jury-list').querySelectorAll('.jury-row').forEach(r => r.remove());
+    document.getElementById('jury-empty').style.display = '';
+    document.getElementById('winners-editing-tag').textContent = '';
+    resetWinnerAddForm();
+    editingWinnerIndex = null;
+    document.getElementById('winner-list').querySelectorAll('.jury-row').forEach(r => r.remove());
+    document.getElementById('winner-empty').style.display = '';
+    setFormEditable(true);
+  }
+
+  function editEvent(id){
+    const ev = EVENTS.find(e => e.eventId === id);
+    if (!ev) return;
+    currentEventId = id;
+    bannerDataUrl = null;
+    document.getElementById('form-title').textContent = 'Edit Event';
+    document.getElementById('ev-title-input').value = (ev.title && ev.title.en) || '';
+    document.getElementById('ev-type-select').value = ev.eventType || (SETTINGS.eventTypes[0] || '');
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.toggle('sel', o.dataset.val === ev.status));
+    document.getElementById('ev-lastdate-input').value = ev.lastDateOfSubmission || '';
+    const evCats = ev.ageCategory || [];
+    document.querySelectorAll('.ev-agecat-cb').forEach(cb => cb.checked = evCats.includes(cb.value));
+    document.getElementById('ev-winners-checkbox').checked = !!(ev.results && ev.results.winnersAnnounced);
+    document.getElementById('ev-formurl-input').value = ev.form_url || '';
+    document.getElementById('ev-desc-textarea').value = (ev.description && ev.description.en) || '';
+    document.getElementById('ev-banner-label').textContent = ev.bannerImageUrl ? 'banner uploaded — click to replace' : 'Drag a banner image here or click to upload';
+    document.getElementById('media-links-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    renderMediaLinks();
+    document.getElementById('jury-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    resetJuryAddForm();
+    editingJuryIndex = null;
+    renderJury();
+    document.getElementById('winners-editing-tag').textContent = '— editing: ' + ((ev.title && ev.title.en) || id);
+    resetWinnerAddForm();
+    editingWinnerIndex = null;
+    renderWinners();
+    setFormEditable(!ev.locked);
+    document.querySelector('.panel:nth-child(2)').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.getElementById('btn-unlock-event').addEventListener('click', async () => {
+    const ev = EVENTS.find(e => e.eventId === currentEventId);
+    if (!ev) return;
+    if (!confirm('Unlock this event for editing? Winners have already been announced — only do this to fix a mistake.')) return;
+    ev.locked = false;
+    renderRows();
+    await persistEvents();
+    setFormEditable(true);
+  });
+
+  async function deleteEvent(id){
+    if (!confirm('Delete this event? This cannot be undone.')) return;
+    EVENTS = EVENTS.filter(e => e.eventId !== id);
+    renderRows();
+    updateStats();
+    if (currentEventId === id) resetForm();
+    await persistEvents();
+  }
+
+  document.getElementById('btn-new-event').addEventListener('click', resetForm);
+  document.getElementById('btn-cancel-event').addEventListener('click', resetForm);
+
+  document.getElementById('ev-status-toggle').addEventListener('click', e => {
+    const opt = e.target.closest('.toggle-opt'); if (!opt) return;
+    document.querySelectorAll('#ev-status-toggle .toggle-opt').forEach(o => o.classList.remove('sel'));
+    opt.classList.add('sel');
+  });
+
+  document.getElementById('ev-banner-dropzone').addEventListener('click', () => document.getElementById('ev-banner-input').click());
+  document.getElementById('ev-banner-input').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      bannerDataUrl = ev.target.result;
+      document.getElementById('ev-banner-label').textContent = file.name + ' — ready to save';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('btn-save-event').addEventListener('click', async () => {
+    const title = document.getElementById('ev-title-input').value.trim();
+    if (!title) { document.getElementById('ev-title-input').focus(); return; }
+    const status = document.querySelector('#ev-status-toggle .toggle-opt.sel').dataset.val;
+    const eventType = document.getElementById('ev-type-select').value;
+    const lastDate = document.getElementById('ev-lastdate-input').value;
+    const ageCategory = Array.from(document.querySelectorAll('.ev-agecat-cb:checked')).map(cb => cb.value);
+    const winnersAnnounced = document.getElementById('ev-winners-checkbox').checked;
+    const locked = status === 'past' && winnersAnnounced; // accident-prevention auto-lock; admin can Unlock
+    const formUrl = document.getElementById('ev-formurl-input').value.trim();
+    const desc = document.getElementById('ev-desc-textarea').value.trim();
+
+    let bannerUrl = null;
+    if (bannerDataUrl) {
+      const pw = sessionStorage.getItem("jinswara_admin_pw") || "";
+      const [meta, b64] = bannerDataUrl.split(',');
+      const ct = (meta.match(/data:(.*?);/) || [,'image/jpeg'])[1];
+      try {
+        const resp = await fetch(ADMIN_API + "/upload-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": pw },
+          body: JSON.stringify({ filename: title.replace(/\s+/g,'-').toLowerCase()+'-banner.jpg', dataBase64: b64, contentType: ct })
+        });
+        const data = await resp.json();
+        if (data.ok) bannerUrl = data.url;
+      } catch(e) { console.error('banner upload failed', e); }
+    }
+
+    if (currentEventId) {
+      const ev = EVENTS.find(e => e.eventId === currentEventId);
+      Object.assign(ev, {
+        title: { ...(ev.title||{}), en: title },
+        status, eventType, ageCategory,
+        lastDateOfSubmission: lastDate,
+        form_url: formUrl,
+        description: { ...(ev.description||{}), en: desc },
+        bannerImageUrl: bannerUrl || ev.bannerImageUrl || '',
+        results: { ...(ev.results||{}), winnersAnnounced },
+        locked
+      });
+    } else {
+      const newId = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + (EVENTS.length+1);
+      EVENTS.unshift({
+        eventId: newId,
+        title: { en: title }, status, year: new Date().getFullYear(), month: '',
+        eventType, ageCategory, lastDateOfSubmission: lastDate,
+        description: { en: desc }, rules: [], juryPanel: [],
+        results: { winners: [], participants: [], gallery: [], winnersAnnounced },
+        bannerImageUrl: bannerUrl || '', form_url: formUrl, mediaLinks: [], locked
+      });
+      currentEventId = newId;
+    }
+    renderRows();
+    updateStats();
+    await persistEvents();
+    resetForm();
+  });
+
+  (async () => { await loadSettings(); await loadEvents(); })();
+</script>
+</body>
+</html>

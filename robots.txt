@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /events/admin-panel
+Disallow: /events/volunteers-admin
+Disallow: /events/bookclub-admin
+Disallow: /events/platforms-admin
+Disallow: /events/archive
+Disallow: /events/settings
+Disallow: /events/edit-event
+
+Sitemap: https://jinswara.lauki.ai/sitemap.xml

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>JinSwara — Book Club Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a16; --bg-2: #0b1022; --bg-3: #0e1430;
+    --ink: #eef1ff; --ink-dim: #9aa3c7; --ink-faint: #626b8f;
+    --violet: #8b5cf6; --indigo: #6366f1; --teal: #2dd4bf;
+    --coral: #ff6b6b; --gold: #fbbf24; --pink: #f472b6; --lavender: #c4b5fd;
+    --card: rgba(255,255,255,.035); --card-border: rgba(255,255,255,.09);
+    --radius: 18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  h1,h2,h3,.display { font-family:'DM Sans','Inter',sans-serif; }
+
+  .shell { display:flex; min-height:100vh; }
+
+  .sidebar { width:230px; flex:none; background: var(--bg-2); border-right:1px solid var(--card-border);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:0 8px 26px; }
+  .sb-logo-mark { width:34px; height:34px; border-radius:10px; background:#f0f4f8; display:grid; place-items:center; font-weight:800; color:#1a1a2e; font-size:15px; }
+  .sb-logo-text { font-weight:700; font-size:15.5px; letter-spacing:-.01em; }
+  .sb-logo-text span { display:block; font-size:11px; font-weight:500; color:var(--ink-faint); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:var(--ink-dim);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .sb-nav a svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; flex:none; }
+  .sb-nav a.active { background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(139,92,246,.12)); color:var(--ink);
+    border:1px solid rgba(139,92,246,.25); }
+  .sb-nav a:not(.active):hover { background: rgba(255,255,255,.04); color:var(--ink); }
+  .sb-foot { margin-top:auto; padding:12px 14px; border-top:1px solid var(--card-border); font-size:12px; color:var(--ink-faint); }
+
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+    border-bottom:1px solid var(--card-border); }
+  .topbar h1 { font-size:20px; font-weight:800; }
+  .topbar p { font-size:13px; color:var(--ink-faint); margin-top:2px; }
+  .admin-chip { display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
+    padding:7px 14px 7px 8px; border-radius:100px; font-size:13px; font-weight:600; }
+  .admin-chip .av { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--indigo),var(--violet)); }
+
+  .content { padding:28px 32px 60px; max-width:860px; }
+
+  .card { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:20px 22px; margin-bottom:18px; }
+  .card h2 { font-size:15px; font-weight:700; margin-bottom:12px; color:var(--lavender); }
+  .card .sub { color:var(--ink-faint); font-size:12.5px; margin-bottom:10px; }
+  label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-dim); margin:12px 0 6px; }
+  input[type=text],input[type=number],input[type=month],textarea,select { width:100%; background:var(--bg-3); border:1px solid var(--card-border); border-radius:10px;
+    color:var(--ink); padding:10px 12px; font-size:13.5px; font-family:inherit; }
+  textarea { min-height:90px; resize:vertical; }
+  input[type=month],select { color-scheme:dark; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:640px){ .row { grid-template-columns:1fr; } }
+  button { cursor:pointer; border:0; border-radius:10px; padding:11px 20px; font-weight:700; font-size:13px; font-family:inherit; }
+  .btn-primary { background:linear-gradient(135deg,var(--indigo),var(--violet)); color:#fff; }
+  .btn-ghost { background:transparent; border:1px solid var(--card-border); color:var(--ink); }
+  .btn-danger { background:transparent; border:1px solid var(--coral); color:var(--coral); padding:6px 12px; font-size:12px; }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+  .ed-item { border:1px dashed var(--card-border); border-radius:10px; padding:12px; margin-top:10px; }
+  .status { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--bg-2); border:1px solid var(--card-border);
+    padding:10px 24px; border-radius:99px; font-size:13px; display:none; z-index:50; }
+  .past-item { display:flex; justify-content:space-between; align-items:center; border:1px solid var(--card-border); border-radius:10px;
+    padding:10px 14px; margin-top:8px; font-size:13px; }
+  .page-actions { display:flex; justify-content:flex-end; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width:100%; flex-direction:row; align-items:center; overflow-x:auto;
+      -webkit-overflow-scrolling:touch; padding:10px 12px; border-right:none;
+      border-bottom:1px solid var(--card-border); gap:8px; }
+    .sidebar .sb-logo { display:none; }
+    .sb-nav { display:flex; flex-direction:row; gap:6px; flex:none; }
+    .sb-nav a { flex:none; white-space:nowrap; padding:9px 12px; margin-bottom:0; }
+    .sb-foot { display:none; }
+    .main { width:100%; min-width:0; }
+    .content { padding:20px 16px 60px; }
+    .topbar { padding:16px; }
+  }
+</style>
+<style>/* jsw-mobile-fix 2026-08-18 */
+@media (max-width:768px){
+input,select,textarea{font-size:16px !important;}
+}
+</style>
+</head>
+<body>
+<div id="admin-auth-gate" style="position:fixed;inset:0;z-index:9999;background:#070a16;display:flex;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:36px 32px;max-width:340px;width:90%;text-align:center;font-family:'Inter',system-ui,sans-serif;">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:18px;color:#eef1ff;margin-bottom:6px;">JinSwara Admin</div>
+    <div style="font-size:13px;color:#9aa3c7;margin-bottom:20px;">enter the admin password to continue</div>
+    <input id="admin-auth-pw" type="password" placeholder="password" style="width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:#eef1ff;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+    <button id="admin-auth-btn" style="width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;padding:11px 14px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Enter</button>
+    <div id="admin-auth-err" style="color:#ff6b6b;font-size:12.5px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+<script>
+const ADMIN_API = "https://jinswara.lauki.ai/api/admin";
+(function(){
+  document.getElementById("admin-auth-btn").addEventListener("click", tryLogin);
+  document.getElementById("admin-auth-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") tryLogin(); });
+
+  async function verifyPw(pw) {
+    try {
+      const resp = await fetch(ADMIN_API + "/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password: pw}) });
+      const data = await resp.json();
+      return !!data.ok;
+    } catch(e) { return false; }
+  }
+
+  async function tryLogin() {
+    const pw = document.getElementById("admin-auth-pw").value;
+    const errEl = document.getElementById("admin-auth-err");
+    errEl.textContent = "Checking…";
+    const ok = await verifyPw(pw);
+    if (ok) {
+      sessionStorage.setItem("jinswara_admin_pw", pw);
+      document.getElementById("admin-auth-gate").style.display = "none";
+    } else {
+      errEl.textContent = "Incorrect password";
+    }
+  }
+
+  (function(){
+    if (sessionStorage.getItem("jinswara_admin_pw")) {
+      document.getElementById("admin-auth-gate").style.display = "none";
+    }
+  })();
+  (async () => {
+    const saved = sessionStorage.getItem("jinswara_admin_pw");
+    if (saved) {
+      const ok = await verifyPw(saved);
+      if (!ok) {
+        sessionStorage.removeItem("jinswara_admin_pw");
+        document.getElementById("admin-auth-gate").style.display = "flex";
+      }
+    }
+  })();
+})();
+</script>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">जि</div>
+      <div class="sb-logo-text">JinSwara<span>Events Admin</span></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/events/admin-panel"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Events</a>
+      <a href="/events/volunteers-admin"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Volunteers</a>
+      <a href="/events/platforms-admin"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>Platforms</a>
+      <a class="active" href="/events/bookclub-admin"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Book Club</a>
+      <a href="/events/archive"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Archive</a>
+      <a href="/events/settings"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.3.66.94 1.09 1.66 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sb-foot">jinswara.lauki.ai/admin</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Book Club</h1><p>Manage the Book of the Month from here. Changes go live as soon as you save.</p></div>
+      <div class="admin-chip"><div class="av"></div>Divya</div>
+    </div>
+
+    <div class="content">
+      <div class="page-actions">
+        <button class="btn-ghost btn-sm" onclick="window.open('/book-of-the-month','_blank')">View Live Page ↗</button>
+        <button class="btn-primary" onclick="openEditor('new')">＋ Add New Book</button>
+      </div>
+
+      <div class="card">
+        <h2>All Books</h2>
+        <p class="sub">Current and archived books in one place — click Edit to update the details.</p>
+        <div id="book-list"></div>
+      </div>
+
+      <div id="editor" style="display:none;">
+        <div class="card" style="padding:16px 20px;">
+          <label style="margin-top:0;">📚 Import from JinWani — paste the book link and the details will be filled in automatically</label>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="text" id="jw-url" placeholder="https://jinwani.jinswara.com/book/..." style="flex:1;">
+            <button class="btn-primary" id="jw-btn" onclick="importFromJinwani()" style="white-space:nowrap;">⬇ Import</button>
+          </div>
+          <div id="jw-status" style="display:none;font-size:13px;margin-top:8px;"></div>
+        </div>
+
+        <div class="card">
+          <h2 id="editor-title">Book Details</h2>
+          <div class="row">
+            <div><label>Month</label><input type="month" id="f-month" onchange="syncCurrentMonth()">
+              <label style="display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:12.5px;font-weight:500;color:var(--ink-dim);cursor:pointer;"><input type="checkbox" id="f-currentMonth" onchange="toggleCurrentMonth()" style="width:auto;margin:0;accent-color:var(--teal);"> Current month &mdash; make this the Book of the Month</label></div>
+            <div><label>Status</label><select id="f-status"><option value="current">Current Book</option><option value="past">Archived (Past Book)</option></select></div>
+          </div>
+          <div class="row">
+            <div><label>Title (Hindi)</label><input type="text" id="f-titleHindi"></div>
+            <div><label>Title (English)</label><input type="text" id="f-titleEnglish"></div>
+          </div>
+          <div class="row">
+            <div><label>Author</label><input type="text" id="f-author"></div>
+            <div><label>Publisher</label><input type="text" id="f-publisher"></div>
+          </div>
+          <div class="row">
+            <div><label>Genre / Category line</label><input type="text" id="f-genre"></div>
+            <div><label>Pages</label><input type="number" id="f-pages"></div>
+          </div>
+          <label>Summary</label><textarea id="f-summary"></textarea><div style="font-size:11.5px;color:var(--ink-faint,#8a8a93);margin-top:5px;">Markdown supported &mdash; **bold**, *italic*, # heading, - list, [link](url)</div>
+          <div class="row">
+            <div>
+              <label>Cover Image</label><input type="text" id="f-coverUrl" placeholder="URL or upload →">
+              <input type="file" id="f-coverFile" accept="image/*" style="margin-top:6px;font-size:12px;color:var(--ink-faint);">
+            </div>
+            <div>
+              <label>Book PDF</label><input type="text" id="f-pdfUrl" placeholder="URL or upload →">
+              <input type="file" id="f-pdfFile" accept="application/pdf" style="margin-top:6px;font-size:12px;color:var(--ink-faint);">
+            </div>
+          </div>
+          <div class="row">
+            <div><label>Discussion Recording (YouTube link — leave blank if not available)</label><input type="text" id="f-recordingUrl"></div>
+            <div><label>WhatsApp Group Link</label><input type="text" id="f-whatsappUrl"></div>
+          </div>
+          <label>Quotes (one quote per line)</label><textarea id="f-quotes"></textarea>
+        </div>
+
+        <div class="card">
+          <h2>Editions (buy links)</h2>
+          <div id="editions"></div>
+          <button class="btn-ghost btn-sm" style="margin-top:10px;" onclick="addEdition()">+ Add Edition</button>
+        </div>
+
+        <div class="page-actions">
+          <button class="btn-ghost" onclick="closeEditor()">Cancel</button>
+          <button class="btn-primary" onclick="saveAll()">💾 Save &amp; Publish</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="status" id="status"></div>
+
+<script>
+const API = '/api/admin';
+const SB = 'https://aarpvkroygnuvqgygvsy.supabase.co/storage/v1/object/public/events-data/bookclub.json';
+let DATA = { current: {}, past: [] };
+let EDIT = null;
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function getPw(){ return sessionStorage.getItem('jinswara_admin_pw') || ''; }
+function nowYM(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function toggleCurrentMonth(){
+  const cb=document.getElementById('f-currentMonth');
+  if(cb.checked){ document.getElementById('f-month').value = nowYM(); document.getElementById('f-status').value = 'current'; }
+}
+function syncCurrentMonth(){ document.getElementById('f-currentMonth').checked = (document.getElementById('f-month').value === nowYM()); }
+
+function toast(msg, ok=true){ const s=document.getElementById('status'); s.textContent=msg; s.style.display='block'; s.style.borderColor= ok?'var(--teal)':'var(--coral)'; setTimeout(()=>s.style.display='none', 3500); }
+
+function monthToInput(s){
+  if(!s) return '';
+  if(/^\d{4}-\d{2}$/.test(s.trim())) return s.trim();
+  const m = s.match(/([A-Za-z]+)[\s,]+(\d{4})/);
+  if(!m) return '';
+  const idx = MONTHS.findIndex(x=>x.toLowerCase().startsWith(m[1].toLowerCase().slice(0,3)));
+  return idx<0 ? '' : m[2]+'-'+String(idx+1).padStart(2,'0');
+}
+function inputToMonth(v){
+  if(!v) return '';
+  const p = v.split('-');
+  const idx = parseInt(p[1],10)-1;
+  return (MONTHS[idx]||'')+' '+p[0];
+}
+
+async function load(){
+  try{ const r = await fetch(SB+'?t='+Date.now()); if(r.ok) DATA = await r.json(); }catch(e){}
+  DATA.past = DATA.past||[];
+  renderList();
+}
+
+function bookLabel(b){
+  return (b.month? b.month+' \u2014 ' : '') + (b.titleHindi||b.titleEnglish||'?') + (b.author? ' ('+b.author+')' : '');
+}
+function badge(t,c){ return `<span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;padding:3px 9px;border-radius:20px;margin-right:10px;background:${c}22;color:${c};border:1px solid ${c}55;flex-shrink:0;">${t}</span>`; }
+
+function renderList(){
+  const rows = [];
+  const cur = DATA.current||{};
+  if(cur.titleHindi||cur.titleEnglish)
+    rows.push(`<div class="past-item"><span style="display:flex;align-items:center;min-width:0;">${badge('CURRENT','#2dd4bf')}<span>${bookLabel(cur)}</span></span><span style="display:flex;gap:8px;flex-shrink:0;"><button class="btn-ghost btn-sm" onclick="openEditor('current')">✏️ Edit</button></span></div>`);
+  (DATA.past||[]).forEach((b,i)=>
+    rows.push(`<div class="past-item"><span style="display:flex;align-items:center;min-width:0;">${badge('ARCHIVED','#8b5cf6')}<span>${bookLabel(b)}</span></span><span style="display:flex;gap:8px;flex-shrink:0;"><button class="btn-ghost btn-sm" onclick="openEditor('past',${i})">✏️ Edit</button><button class="btn-danger" onclick="delPast(${i})">Delete</button></span></div>`));
+  document.getElementById('book-list').innerHTML = rows.join('') || '<p class="sub">No books have been added yet \u2014 please click "Add New Book" above.</p>';
+}
+
+async function delPast(i){
+  if(!confirm('Delete this archived book?')) return;
+  DATA.past.splice(i,1);
+  if(EDIT && EDIT.mode==='past' && EDIT.i===i) closeEditor();
+  renderList();
+  await persist('\u2705 Deleted \u2014 the live page has been updated');
+}
+
+function fillForm(b){
+  b = b||{};
+  for(const k of ['titleHindi','titleEnglish','author','publisher','genre','summary','coverUrl','pdfUrl','recordingUrl','whatsappUrl'])
+    document.getElementById('f-'+k).value = b[k]??'';
+  document.getElementById('f-month').value = monthToInput(b.month||'');
+  syncCurrentMonth();
+  document.getElementById('f-pages').value = b.pages??'';
+  document.getElementById('f-quotes').value = (b.quotes||[]).map(q=>q.text).join('\n');
+  document.getElementById('f-coverFile').value=''; document.getElementById('f-pdfFile').value='';
+  renderEditions(b.editions||[]);
+}
+
+function openEditor(mode, i){
+  EDIT = (i===undefined)? {mode} : {mode, i};
+  const cur = DATA.current||{};
+  const b = mode==='current' ? cur : mode==='past' ? DATA.past[i] : { whatsappUrl: cur.whatsappUrl||'' };
+  fillForm(b);
+  document.getElementById('f-status').value = mode==='past' ? 'past' : 'current';
+  document.getElementById('editor-title').textContent = mode==='new' ? 'Add New Book' : 'Edit Book';
+  document.getElementById('jw-url').value=''; document.getElementById('jw-status').style.display='none';
+  const ed = document.getElementById('editor'); ed.style.display='';
+  ed.scrollIntoView({behavior:'smooth'});
+}
+function closeEditor(){ EDIT=null; document.getElementById('editor').style.display='none'; }
+
+function renderEditions(eds){
+  document.getElementById('editions').innerHTML = eds.map((e,i)=>`
+    <div class="ed-item" data-i="${i}">
+      <div class="row">
+        <div><label>Label (e.g. Hindi Edition)</label><input type="text" class="ed-label" value=""></div>
+        <div><label>Title</label><input type="text" class="ed-title" value=""></div>
+      </div>
+      <label>Note (price / availability)</label><input type="text" class="ed-note">
+      <label>Buy URL (JinWani link)</label><input type="text" class="ed-buy">
+      <button class="btn-danger" style="margin-top:8px;" onclick="this.parentElement.remove()">Remove</button>
+    </div>`).join('');
+  document.querySelectorAll('.ed-item').forEach((el,i)=>{
+    el.querySelector('.ed-label').value = eds[i].label||''; el.querySelector('.ed-title').value = eds[i].title||'';
+    el.querySelector('.ed-note').value = eds[i].note||''; el.querySelector('.ed-buy').value = eds[i].buyUrl||'';
+  });
+}
+function addEdition(){ const c=collectEditions(); c.push({label:'',title:'',note:'',buyUrl:''}); renderEditions(c); }
+function collectEditions(){ return [...document.querySelectorAll('.ed-item')].map(el=>({label:el.querySelector('.ed-label').value, title:el.querySelector('.ed-title').value, note:el.querySelector('.ed-note').value, buyUrl:el.querySelector('.ed-buy').value})); }
+
+function collectBook(){
+  const c = {};
+  for(const k of ['titleHindi','titleEnglish','author','publisher','genre','summary','coverUrl','pdfUrl','recordingUrl','whatsappUrl'])
+    c[k] = document.getElementById('f-'+k).value.trim();
+  c.month = inputToMonth(document.getElementById('f-month').value);
+  c.pages = parseInt(document.getElementById('f-pages').value)||null;
+  c.quotes = document.getElementById('f-quotes').value.split('\n').map(s=>s.trim()).filter(Boolean).map(text=>({text}));
+  c.editions = collectEditions().filter(e=>e.label||e.title);
+  return c;
+}
+
+async function uploadFile(fileInput, targetField){
+  const f = fileInput.files[0]; if(!f) return null;
+  const b64 = await new Promise(res=>{ const rd=new FileReader(); rd.onload=()=>res(rd.result.split(',')[1]); rd.readAsDataURL(f); });
+  const r = await fetch(API+'/upload-image',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':getPw()},body:JSON.stringify({filename:f.name, dataBase64:b64, contentType:f.type})});
+  const d = await r.json();
+  if(d.ok){ document.getElementById(targetField).value = d.url; return d.url; }
+  toast('Upload failed: '+(d.error||''), false); return null;
+}
+
+function cleanMarkdown(s){
+  return (s||'').trim(); // markdown is now rendered on the public pages - keep source formatting as-is
+}
+
+async function importFromJinwani(){
+  const url = document.getElementById('jw-url').value.trim();
+  const st = document.getElementById('jw-status');
+  const show=(msg,ok)=>{ st.textContent=msg; st.style.display='block'; st.style.color= ok?'var(--teal)':'var(--coral)'; };
+  if(!/^https:\/\/jinwani\.jinswara\.com\/book\//.test(url)){ show('Please paste a book link from jinwani.jinswara.com/book/...', false); return; }
+  const btn=document.getElementById('jw-btn'); btn.disabled=true; show('importing\u2026', true);
+  try{
+    const r = await fetch(API+'/jinwani-import?url='+encodeURIComponent(url), {headers:{'X-Admin-Password':getPw()}});
+    if(r.status===401){ sessionStorage.removeItem('jinswara_admin_pw'); location.reload(); return; }
+    const d = await r.json();
+    if(!d.ok){ show('\u274C '+(d.error||'Import failed'), false); return; }
+    const b = d.book, set=(id,v)=>{ if(v!==null&&v!==undefined&&v!=='') document.getElementById(id).value=v; };
+    set('f-titleHindi', b.title); set('f-titleEnglish', b.titleEnglish);
+    set('f-author', b.author); set('f-publisher', b.publisher);
+    set('f-pages', b.pages); set('f-summary', cleanMarkdown(b.description)); set('f-coverUrl', b.coverUrl);
+    set('f-genre', [b.category].concat(b.tags||[]).filter(Boolean).join(' \u00B7 '));
+    const eds = collectEditions();
+    const ed = { label:(b.language? b.language+' Edition':'JinWani Edition'), title: b.title||b.titleEnglish||'', note:(b.price? '\u20B9'+b.price : ''), buyUrl: url };
+    let idx = eds.findIndex(e=>e.buyUrl===url);
+    if(idx<0) idx = eds.findIndex(e=>!e.label&&!e.title&&!e.buyUrl);
+    if(idx>=0) eds[idx]=ed; else eds.push(ed);
+    renderEditions(eds);
+    show('\u2705 Import complete \u2014 please review the details, then click Save & Publish', true);
+  }catch(e){ show('\u274C Network error \u2014 please try again', false); }
+  finally{ btn.disabled=false; }
+}
+
+async function persist(okMsg){
+  const r = await fetch(API+'/save-bookclub',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':getPw()},body:JSON.stringify({bookclub:DATA})});
+  const d = await r.json();
+  toast(d.ok ? okMsg : '\u274C '+(d.error||'Save failed'), d.ok);
+  if(r.status===401){ sessionStorage.removeItem('jinswara_admin_pw'); location.reload(); }
+  return d.ok;
+}
+
+async function saveAll(){
+  if(!EDIT){ toast('Please select a book to edit or click Add New Book first', false); return; }
+  toast('Saving\u2026');
+  if(document.getElementById('f-coverFile').files[0]) await uploadFile(document.getElementById('f-coverFile'),'f-coverUrl');
+  if(document.getElementById('f-pdfFile').files[0]) await uploadFile(document.getElementById('f-pdfFile'),'f-pdfUrl');
+  const c = collectBook();
+  const st = document.getElementById('f-status').value;
+  const cur = DATA.current||{};
+  const hasCur = !!(cur.titleHindi||cur.titleEnglish);
+  DATA.past = DATA.past||[];
+  if(EDIT.mode==='current'){
+    if(st==='past'){ DATA.past.unshift(c); DATA.current = { whatsappUrl: c.whatsappUrl }; EDIT={mode:'past',i:0}; }
+    else DATA.current = c;
+  } else if(EDIT.mode==='past'){
+    if(st==='current'){
+      if(hasCur) DATA.past.unshift(DATA.current);
+      DATA.past.splice(EDIT.i + (hasCur?1:0), 1);
+      DATA.current = c; EDIT={mode:'current'};
+    } else DATA.past[EDIT.i] = c;
+  } else {
+    if(st==='current'){ if(hasCur) DATA.past.unshift(DATA.current); DATA.current = c; EDIT={mode:'current'}; }
+    else { DATA.past.unshift(c); EDIT={mode:'past',i:0}; }
+  }
+  const ok = await persist('\u2705 Saved \u2014 the live page has been updated');
+  if(ok){ renderList(); document.getElementById('editor-title').textContent='Edit Book'; }
+}
+
+load();
+</script>
+</body>
+</html>
